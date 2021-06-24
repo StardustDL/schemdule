@@ -1,6 +1,10 @@
-from datetime import date, time, datetime
+from datetime import date, time, datetime, timedelta
+from typing import Optional
+
 from .prompters import Prompter
 import functools
+
+import json
 
 
 @functools.total_ordering
@@ -30,26 +34,51 @@ class TimeTable:
     def at(self, time: time, message: str = "") -> None:
         self.items.append(TimeTableItem(time, message))
 
+    def cycle(self, start: time, end: time, work_duration: time, rest_duration: time, message: str = "") -> None:
+        _start = datetime(2000, 1, 1) + timedelta(hours=start.hour, minutes=start.minute,
+                                               seconds=start.second, microseconds=start.microsecond)
+        _end = datetime(2000, 1, 1) + timedelta(hours=end.hour, minutes=end.minute,
+                                             seconds=end.second, microseconds=end.microsecond)
+        _work_duration = timedelta(hours=work_duration.hour, minutes=work_duration.minute,
+                                   seconds=work_duration.second, microseconds=work_duration.microsecond)
+        _rest_duration = timedelta(hours=rest_duration.hour, minutes=rest_duration.minute,
+                                   seconds=rest_duration.second, microseconds=rest_duration.microsecond)
 
-def schedule(schema: TimeTable) -> None:
-    items = list(sorted(schema.items))
+        index = 0
 
-    prompter: Prompter
+        current = _start
 
-    from .prompters.general import TkinterPrompter
-    prompter = TkinterPrompter()
+        while current < _end:
+            index += 1
+            self.at(min(current, _end).time(),
+                    f"{message} (cycle {index} starting)")
+            current += _work_duration
+            self.at(min(current, _end).time(),
+                    f"{message} (cycle {index} resting starting)")
+            current += _rest_duration
+            self.at(min(current, _end).time(),
+                    f"{message} (cycle {index} ending)")
 
-    print(items)
-    prompter.prompt("abc")
+    def load(self, src: str) -> None:
+        def at(time_str: str, message: str):
+            self.at(time(*list(map(int, time_str.split(':')))), message)
 
+        def cycle(start_str: str, end_str: str, work_duration_str: str, rest_duration_str: str, message: str):
+            self.cycle(
+                time(*list(map(int, start_str.split(':')))),
+                time(*list(map(int, end_str.split(':')))),
+                time(*list(map(int, work_duration_str.split(':')))),
+                time(*list(map(int, rest_duration_str.split(':')))),
+                message)
 
-def timetable_from_source(src: str) -> TimeTable:
-    result = TimeTable()
+        exec(src, {"at": at, "cycle": cycle})
 
-    def at(time_str: str, message: str):
-        pars = list(map(int, time_str.split(':')))
-        result.at(time(*pars), message)
+    def schedule(self, prompter: Optional[Prompter] = None) -> None:
+        items = list(sorted(self.items))
 
-    eval(src, {"at": at})
+        if prompter is None:
+            from .prompters.general import TkinterPrompter
+            prompter = TkinterPrompter()
 
-    return result
+        print("\n".join(list(map(str, items))))
+        prompter.prompt("abc")
