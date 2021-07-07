@@ -6,23 +6,28 @@ from .timetable import TimeTable
 
 
 def demo():
-    print("DEMO")
+    print("""
+Please give a schema file:
 
-    t1 = TimeTable()
-    t1.at(time(1, 2), "abc")
-    t1.at(time(1, 2), "def")
+    $ python -m scheduler --schema schema.py
 
-    t1.schedule()
+An example schema file (in Python):
 
-    t2 = TimeTable()
-    t2.load("""
-at("1:2:30:40", "message")
+    at("6:30", "Get up")
+    cycle("8:00", "12:00", "00:30:00", "00:10:00", "Working")
+
+Type annotions:
+
+    from typing import Callable
+    # def at(time_str: str, message: str): ...
+    at: Callable[[str, str], None]
+    # def cycle(start_str: str, end_str: str, work_duration_str: str, rest_duration_str: str, message: str): ...
+    cycle: Callable[[str, str, str, str, str], None]
 """)
-    t2.schedule()
 
 
 @click.command()
-@click.option("--schema", default=None, help="File name.")
+@click.option("--schema", default=None, help="Schema file name.")
 def main(schema: Optional[str] = None) -> None:
     """Scheduler."""
     logger = logging.getLogger("main")

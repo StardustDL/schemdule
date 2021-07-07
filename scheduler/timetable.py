@@ -3,8 +3,13 @@ from typing import Optional
 
 from .prompters import Prompter
 import functools
+from queue import deque
+
+from time import sleep
 
 import json
+
+import logging
 
 
 @functools.total_ordering
@@ -25,6 +30,7 @@ class TimeTableItem:
 
     def __repr__(self) -> str:
         return f"TimeTableItem({self.time}, {self.message})"
+
 
 
 class TimeTable:
@@ -74,11 +80,32 @@ class TimeTable:
         exec(src, {"at": at, "cycle": cycle})
 
     def schedule(self, prompter: Optional[Prompter] = None) -> None:
-        items = list(sorted(self.items))
+        now = datetime.now().time()
+
+        print(f"Started Time: {now}")
+
+        items = deque()
+
+        for item in sorted(self.items):
+            if item.time < now:
+                print(f"Outdated: {item.message} @ {item.time}")
+            else:
+                items.append(item)
 
         if prompter is None:
             from .prompters.general import TkinterPrompter
             prompter = TkinterPrompter()
 
-        print("\n".join(list(map(str, items))))
-        prompter.prompt("abc")
+        if len(items) > 0:
+            print(f"Pending: {items[0].message} @ {items[0].time}")
+
+        while len(items) > 0:
+            now = datetime.now().time()
+            item: TimeTableItem = items[0]
+            if item.time <= now:
+                print(f"Attention: {item.message} @ {item.time}")
+                prompter.prompt(item.message)
+                items.popleft()
+                if len(items) > 0:
+                    print(f"Pending: {items[0].message} @ {items[0].time}")
+            sleep(1)
