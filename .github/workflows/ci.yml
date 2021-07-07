@@ -1,8 +1,7 @@
-name: Release
+name: CI
 
 on:
-  release:
-    types: [published]
+  push:
 
 defaults:
   run:
@@ -26,12 +25,6 @@ jobs:
     - name: Build package
       run: |
         python -m build
-    - name: Upload
-      env:
-        TWINE_USERNAME: '__token__'
-        TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-      run: |
-        python -m twine upload --repository pypi dist/*
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
