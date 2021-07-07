@@ -1,10 +1,12 @@
 # Schemdule
 
-A tiny tool using script for schema to schedule one day and remind you to do something during a day.
+![](https://github.com/StardustDL/schemdule/workflows/CI/badge.svg) ![](https://img.shields.io/github/license/StardustDL/schemdule.svg) [![](https://img.shields.io/pypi/dm/schemdule)](https://pypi.org/project/schemdule/)
+
+[Schemdule](https://github.com/StardustDL/schemdule) is a tiny tool using script for schema to schedule one day and remind you to do something during a day.
 
 ## Usage
 
-1. Write a schema for one day in Python.
+### Write a Schema
 
 It's a pure python script, so you can use any python statement in it.
 
@@ -37,7 +39,7 @@ at("6:30", "Get up")
 cycle("8:00", "12:00", "00:30:00", "00:10:00", "Working")
 ```
 
-2. Go!
+### Run
 
 ```sh
 $ python -m schemdule --schema schema.py
