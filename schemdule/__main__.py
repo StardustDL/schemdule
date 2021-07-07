@@ -9,7 +9,7 @@ def demo():
     print("""
 Please give a schema file:
 
-    $ python -m scheduler --schema schema.py
+    $ python -m schemdule --schema schema.py
 
 An example schema file (in Python):
 
@@ -29,10 +29,10 @@ Type annotions:
 @click.command()
 @click.option("--schema", default=None, help="Schema file name.")
 def main(schema: Optional[str] = None) -> None:
-    """Scheduler."""
+    """Schemdule."""
     logger = logging.getLogger("main")
 
-    print("Welcome to Scheduler!")
+    print("Welcome to Schemdule!")
 
     if schema is not None:
         with open(schema, encoding="utf8") as f:

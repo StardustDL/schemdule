@@ -1,6 +1,6 @@
-# Scheduler
+# Schemdule
 
-A tiny tool to schedule one day and remind you to do something during a day.
+A tiny tool using script for schema to schedule one day and remind you to do something during a day.
 
 ## Usage
 
@@ -8,7 +8,7 @@ A tiny tool to schedule one day and remind you to do something during a day.
 
 It's a pure python script, so you can use any python statement in it.
 
-Scheduler provide `at` and `cycle` functions for registering events.
+Schemdule provide `at` and `cycle` functions for registering events.
 
 ```python
 # time_str can be {hh:mm} or {hh:mm:ss}
@@ -40,5 +40,5 @@ cycle("8:00", "12:00", "00:30:00", "00:10:00", "Working")
 2. Go!
 
 ```sh
-$ python -m scheduler --schema schema.py
+$ python -m schemdule --schema schema.py
 ```
