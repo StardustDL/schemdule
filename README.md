@@ -6,6 +6,10 @@
 
 ## Usage
 
+```sh
+$ pip install schemdule
+```
+
 ### Write a Schema
 
 It's a pure python script, so you can use any python statement in it.
