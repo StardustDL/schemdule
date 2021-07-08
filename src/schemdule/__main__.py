@@ -29,7 +29,7 @@ Type annotions:
 @click.command()
 @click.option("--schema", default=None, help="Schema file name.")
 def main(schema: Optional[str] = None) -> None:
-    """Schemdule."""
+    """Schemdule (https://github.com/StardustDL/schemdule)."""
     logger = logging.getLogger("main")
 
     print("Welcome to Schemdule!")

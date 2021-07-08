@@ -46,5 +46,6 @@ cycle("8:00", "12:00", "00:30:00", "00:10:00", "Working")
 ### Run
 
 ```sh
+$ schemdule --schema schema.py
 $ python -m schemdule --schema schema.py
 ```
