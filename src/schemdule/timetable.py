@@ -108,16 +108,21 @@ class TimeTable:
             if len(items) > 0:
                 item: TimeTableItem = items[0]
                 click.echo(f"Pending: {item.message} @ {item.time}")
-                last = datetime.now()
+                now = datetime.now()
+                last = now
                 if lastItem is not None:
-                    last = datetime(year=last.year, month=last.month, day=last.day,
+                    """
+                    last = datetime(year=now.year, month=now.month, day=now.day,
                                    hour=lastItem.time.hour, minute=lastItem.time.minute, second=lastItem.time.second, microsecond=lastItem.time.microsecond)
-                delta = datetime(year=last.year, month=last.month, day=last.day,
-                                 hour=item.time.hour, minute=item.time.minute, second=item.time.second, microsecond=item.time.microsecond) - last
-                pendingTotal = int(round(delta.total_seconds()))
+                    """
+                itemTime = datetime(year=last.year, month=last.month, day=last.day,
+                                 hour=item.time.hour, minute=item.time.minute, second=item.time.second, microsecond=item.time.microsecond)
+                deltaLast = itemTime - last
+                deltaNow = itemTime - now
+                pendingTotal = int(round(deltaLast.total_seconds()))
                 if pbar is None and pendingTotal > 0:
                     pbar = enlighten.Counter(
-                        total=pendingTotal, desc=item.message, unit='ticks')
+                        total=pendingTotal, desc=item.message, unit='ticks', count=pendingTotal - int(round(deltaNow.total_seconds())))
 
         pending()
 
