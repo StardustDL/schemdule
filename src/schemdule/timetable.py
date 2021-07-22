@@ -1,9 +1,13 @@
 from datetime import date, time, datetime, timedelta
 from typing import Optional
 
+from click.core import Option
+
 from .prompters import Prompter
 import functools
 from queue import deque
+import enlighten
+import click
 
 from time import sleep
 
@@ -32,7 +36,6 @@ class TimeTableItem:
         return f"TimeTableItem({self.time}, {self.message})"
 
 
-
 class TimeTable:
     def __init__(self) -> None:
         self.items: list[TimeTableItem] = []
@@ -42,9 +45,9 @@ class TimeTable:
 
     def cycle(self, start: time, end: time, work_duration: time, rest_duration: time, message: str = "") -> None:
         _start = datetime(2000, 1, 1) + timedelta(hours=start.hour, minutes=start.minute,
-                                               seconds=start.second, microseconds=start.microsecond)
+                                                  seconds=start.second, microseconds=start.microsecond)
         _end = datetime(2000, 1, 1) + timedelta(hours=end.hour, minutes=end.minute,
-                                             seconds=end.second, microseconds=end.microsecond)
+                                                seconds=end.second, microseconds=end.microsecond)
         _work_duration = timedelta(hours=work_duration.hour, minutes=work_duration.minute,
                                    seconds=work_duration.second, microseconds=work_duration.microsecond)
         _rest_duration = timedelta(hours=rest_duration.hour, minutes=rest_duration.minute,
@@ -82,13 +85,17 @@ class TimeTable:
     def schedule(self, prompter: Optional[Prompter] = None) -> None:
         now = datetime.now().time()
 
-        print(f"Started Time: {now}")
+        click.echo(f"Started Time: {now}")
 
         items = deque()
 
+        pbar: Optional[enlighten.Counter] = None
+        lastItem: Optional[TimeTableItem] = None
+
         for item in sorted(self.items):
             if item.time < now:
-                print(f"Outdated: {item.message} @ {item.time}")
+                click.echo(f"Outdated: {item.message} @ {item.time}")
+                lastItem = item
             else:
                 items.append(item)
 
@@ -96,16 +103,45 @@ class TimeTable:
             from .prompters.general import TkinterPrompter
             prompter = TkinterPrompter()
 
-        if len(items) > 0:
-            print(f"Pending: {items[0].message} @ {items[0].time}")
+        def pending():
+            nonlocal pbar
+            if len(items) > 0:
+                item: TimeTableItem = items[0]
+                click.echo(f"Pending: {item.message} @ {item.time}")
+                last = datetime.now()
+                if lastItem is not None:
+                    last = datetime(year=last.year, month=last.month, day=last.day,
+                                   hour=lastItem.time.hour, minute=lastItem.time.minute, second=lastItem.time.second, microsecond=lastItem.time.microsecond)
+                delta = datetime(year=last.year, month=last.month, day=last.day,
+                                 hour=item.time.hour, minute=item.time.minute, second=item.time.second, microsecond=item.time.microsecond) - last
+                pendingTotal = int(round(delta.total_seconds()))
+                if pbar is None and pendingTotal > 0:
+                    pbar = enlighten.Counter(
+                        total=pendingTotal, desc=item.message, unit='ticks')
+
+        pending()
 
         while len(items) > 0:
-            now = datetime.now().time()
+            now = datetime.now()
             item: TimeTableItem = items[0]
-            if item.time <= now:
-                print(f"Attention: {item.message} @ {item.time}")
+            if item.time <= now.time():
+                if pbar is not None:
+                    pbar.close(clear=True)
+                    pbar = None
+                click.echo(f"Attention: {item.message} @ {item.time}")
                 prompter.prompt(item.message)
                 items.popleft()
-                if len(items) > 0:
-                    print(f"Pending: {items[0].message} @ {items[0].time}")
+                pending()
+            else:
+                if pbar is not None:
+                    pending: TimeTableItem = items[0]
+                    delta = datetime(year=now.year, month=now.month, day=now.day,
+                                     hour=item.time.hour, minute=item.time.minute, second=item.time.second, microsecond=item.time.microsecond) - now
+                    count = int(round(delta.total_seconds()))
+                    pbar.update((pbar.total - count) - pbar.count)
+
             sleep(1)
+
+        if pbar is not None:
+            pbar.close(clear=True)
+            pbar = None

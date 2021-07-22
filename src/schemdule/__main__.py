@@ -1,12 +1,13 @@
 from typing import Optional
 import click
 import logging
-from datetime import time
+import enlighten
+import time
 from .timetable import TimeTable
 
 
 def demo():
-    print("""
+    click.echo("""
 Please give a schema file:
 
     $ python -m schemdule --schema schema.py
@@ -23,7 +24,8 @@ Type annotions:
     at: Callable[[str, str], None]
     # def cycle(start_str: str, end_str: str, work_duration_str: str, rest_duration_str: str, message: str): ...
     cycle: Callable[[str, str, str, str, str], None]
-""")
+""")   
+        
 
 
 @click.command()
@@ -32,7 +34,7 @@ def main(schema: Optional[str] = None) -> None:
     """Schemdule (https://github.com/StardustDL/schemdule)."""
     logger = logging.getLogger("main")
 
-    print("Welcome to Schemdule!")
+    click.echo("Welcome to Schemdule!")
 
     if schema is not None:
         with open(schema, encoding="utf8") as f:
