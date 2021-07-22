@@ -75,6 +75,42 @@ class TimeTable:
         exec(src, {"at": at, "cycle": cycle})
 
     def schedule(self, prompter: Optional[Prompter] = None) -> None:
+        def outdating(item: TimeTableItem) -> bool:
+            now = datetime.now().time()
+
+            if item.time < now:
+                click.echo(f"Outdated: {item.message} @ {item.time}")
+                return True
+            
+            return False
+
+        def pending(item: TimeTableItem, status: enlighten.StatusBar, manager: enlighten.Manager) -> bool:
+            now = datetime.now().time()
+
+            if item.time <= now:
+                return False
+
+            status.update(f"Pending: {item.message} @ {item.time}")
+            deltaNow = subtract_time(item.time, now)
+            pendingTotal = int(round(deltaNow.total_seconds()))
+
+            with manager.counter(
+                total=pendingTotal, desc="", unit='ticks', leave=False) as pbar:
+
+                while True:
+                    now = datetime.now().time()
+                    if item.time <= now:
+                        click.echo(f"Attention: {item.message} @ {item.time}")
+                        prompter.prompt(item.message)
+                        return True
+                    else:
+                        delta = subtract_time(item.time, now)
+                        count = int(round(delta.total_seconds()))
+                        pbar.update((pbar.total - count) - pbar.count)
+                    sleep(1)
+            
+            return False
+
         click.echo(f"Started Time: {datetime.now().time()}")
 
         if prompter is None:
@@ -84,68 +120,14 @@ class TimeTable:
         items = deque(sorted(self.items))
 
         with enlighten.get_manager() as manager:
-
-            pbar: Optional[enlighten.Counter] = None
-            lastItem: Optional[TimeTableItem] = None
-
-            status = manager.status_bar('Static Message',
+            with manager.status_bar('Status',
                                         color='white_on_cyan',
-                                        justify=enlighten.Justify.CENTER, leave=False)
-
-            def outdating():
-                nonlocal lastItem
-
-                now = datetime.now().time()
-
+                                        justify=enlighten.Justify.CENTER, leave=False) as status:
+                
                 while len(items) > 0:
-                    item = items[0]
-                    if item.time < now:
-                        click.echo(f"Outdated: {item.message} @ {item.time}")
-                        lastItem = item
-                        items.popleft()
-                    else:
-                        break
-
-            def pending():
-                nonlocal pbar
-                if len(items) > 0:
                     item: TimeTableItem = items[0]
-                    status.update(f"Pending: {item.message} @ {item.time}")
-                    now = datetime.now()
-                    deltaNow = subtract_time(item.time, now.time())
-                    pendingTotal = int(round(deltaNow.total_seconds()))
-                    if pendingTotal > 0:
-                        pbar = manager.counter(
-                            total=pendingTotal, desc="", unit='ticks', leave=False)
 
-            def clear():
-                nonlocal pbar
-
-                if pbar is not None:
-                    pbar.close()
-                    pbar = None
-
-            outdating()
-            pending()
-
-            while len(items) > 0:
-                now = datetime.now().time()
-                item: TimeTableItem = items[0]
-                if item.time <= now:
-                    clear()
-
-                    click.echo(f"Attention: {item.message} @ {item.time}")
-                    prompter.prompt(item.message)
-                    items.popleft()
-                    outdating()
-                    pending()
-                else:
-                    if pbar is not None:
-                        delta = subtract_time(item.time, now)
-                        count = int(round(delta.total_seconds()))
-                        pbar.update((pbar.total - count) - pbar.count)
-
-                sleep(1)
-
-            clear()
-            status.close()
+                    if outdating(item):
+                        items.popleft()
+                    elif pending(item, status, manager):
+                        items.popleft()
