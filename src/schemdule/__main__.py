@@ -43,10 +43,10 @@ def run(schema: str, preview: bool = False) -> None:
 
     click.echo("Welcome to Schemdule!")
 
-    with open(schema, encoding="utf8") as f:
-        src = "".join(f.readlines())
     tt = TimeTable()
-    tt.load(src)
+
+    with open(schema, encoding="utf8") as f:
+        tt.load(f.read())
 
     if preview:
         for item in sorted(tt.items):

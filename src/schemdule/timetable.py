@@ -74,7 +74,10 @@ class TimeTable:
                 tstart, tend, twork_duration, trest_duration,
                 message)
 
-        exec(src, {"at": at, "cycle": cycle})
+        def load(source: str):
+            self.load(source)
+
+        exec(src, {"at": at, "cycle": cycle, "load": load})
 
     def schedule(self, prompter: Optional[Prompter] = None) -> None:
         def outdating(item: TimeTableItem) -> bool:

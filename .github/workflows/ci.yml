@@ -60,7 +60,7 @@ jobs:
         path: ./dist
     - name: Test install
       run: |
-        python -m pip install ./dist/schemdule-0.0.2-py3-none-any.whl
+        python -m pip install ./dist/schemdule-0.0.3-py3-none-any.whl
     - name: Test run through python
       run: |
         python -m schemdule demo

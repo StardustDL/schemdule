@@ -17,19 +17,23 @@ $ pip install schemdule
 
 It's a pure python script, so you can use any python statement in it.
 
-Schemdule provide `at` and `cycle` functions for registering events.
+Schemdule provide `at`, `cycle`, and `load` functions for registering events.
 
 ```python
 # raw_time can be {hh:mm} or {hh:mm:ss} or a datetime.time object
 
-def at(raw_time: Union[str, time], message: str):
+def at(raw_time: Union[str, time], message: str) -> None:
     # register an event at time with message
     ...
 
-def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time], raw_rest_duration: Union[str, time], message: str):
+def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time], raw_rest_duration: Union[str, time], message: str) -> None:
     # register a series of events in cycle during start to end
     # the duration of one cycle = work_duration + rest_duration
     # For each cycle, register 2 event: cycle starting, cycle resting
+    ...
+
+def load(source: str) -> None:
+    # load from a schema source code
     ...
 ```
 
@@ -41,10 +45,32 @@ from typing import Callable, Union
 from datetime import time
 at: Callable[[Union[str, time], str], None]
 cycle: Callable[[Union[str, time], Union[str, time], Union[str, time], Union[str, time], str], None]
+load: Callable[[str], None]
 
 # Schema
 at("6:30", "Get up")
 cycle("8:00", "12:00", "00:30:00", "00:10:00", "Working")
+# Import other schema by `load` function
+# with open("other_schema.py", encoding="utf8") as f:
+    # load(f.read())
+```
+
+The built timetable is like the following one.
+
+```
+Get up @ 06:30:00
+Working (cycle 1 starting) @ 08:00:00
+Working (cycle 1 resting starting) @ 08:30:00
+Working (cycle 2 starting) @ 08:40:00
+Working (cycle 2 resting starting) @ 09:10:00
+Working (cycle 3 starting) @ 09:20:00
+Working (cycle 3 resting starting) @ 09:50:00
+Working (cycle 4 starting) @ 10:00:00
+Working (cycle 4 resting starting) @ 10:30:00
+Working (cycle 5 starting) @ 10:40:00
+Working (cycle 5 resting starting) @ 11:10:00
+Working (cycle 6 starting) @ 11:20:00
+Working (cycle 6 resting starting) @ 11:50:00
 ```
 
 ### Run
