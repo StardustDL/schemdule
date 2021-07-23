@@ -36,25 +36,31 @@ cycle((now + timedelta(seconds=5)).time(),
     tt.schedule(ConsolePrompter())
 
 @click.command()
+@click.option("--preview/--no-preview", default=False, help="Preview the built timetable.")
 @click.argument("schema", type=click.Path(exists=True))
-def run(schema: str) -> None:
+def run(schema: str, preview: bool = False) -> None:
     logger = logging.getLogger("main")
 
     click.echo("Welcome to Schemdule!")
 
-    if schema is not None:
-        with open(schema, encoding="utf8") as f:
-            src = "".join(f.readlines())
-        tt = TimeTable()
-        tt.load(src)
-        tt.schedule()
+    with open(schema, encoding="utf8") as f:
+        src = "".join(f.readlines())
+    tt = TimeTable()
+    tt.load(src)
+
+    if preview:
+        for item in sorted(tt.items):
+            click.echo(f"{item.message} @ {item.time}")
     else:
-        demo()
+        tt.schedule()
 
 
 @click.group()
 def main():
-    """Schemdule (https://github.com/StardustDL/schemdule)."""
+    """Schemdule (https://github.com/StardustDL/schemdule)
+
+A tiny tool using script as schema to schedule one day and remind you to do something during a day.
+"""
     pass
 
 main.add_command(run)
