@@ -5,7 +5,7 @@ import enlighten
 import time
 from .timetable import TimeTable
 
-
+@click.command()
 def demo():
     click.echo("""
 Please give a schema file:
@@ -35,11 +35,9 @@ cycle((now + timedelta(seconds=5)).time(),
 
     tt.schedule(ConsolePrompter())
 
-
 @click.command()
-@click.option("--schema", default=None, help="Schema file name.")
-def main(schema: Optional[str] = None) -> None:
-    """Schemdule (https://github.com/StardustDL/schemdule)."""
+@click.argument("schema", type=click.Path(exists=True))
+def run(schema: str) -> None:
     logger = logging.getLogger("main")
 
     click.echo("Welcome to Schemdule!")
@@ -53,6 +51,14 @@ def main(schema: Optional[str] = None) -> None:
     else:
         demo()
 
+
+@click.group()
+def main():
+    """Schemdule (https://github.com/StardustDL/schemdule)."""
+    pass
+
+main.add_command(run)
+main.add_command(demo)
 
 if __name__ == '__main__':
     main()

@@ -63,7 +63,7 @@ jobs:
         python -m pip install ./dist/schemdule-0.0.2-py3-none-any.whl
     - name: Test run through python
       run: |
-        python -m schemdule
+        python -m schemdule demo
     - name: Test run directly
       run: |
-        schemdule
+        schemdule demo
