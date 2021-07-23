@@ -11,21 +11,29 @@ def demo():
 Please give a schema file:
 
     $ python -m schemdule --schema schema.py
+""")
 
-An example schema file (in Python):
+    demo_schema = """
+from datetime import datetime, timedelta
+now = datetime.now()
+at((now + timedelta(seconds=3)).time(), "Demo event")
+cycle((now + timedelta(seconds=5)).time(), 
+    (now + timedelta(seconds=20)).time(),
+    (now + timedelta(seconds=5)).time(),
+    (now + timedelta(seconds=5)).time(), "Demo cycle")
+"""
 
-    at("6:30", "Get up")
-    cycle("8:00", "12:00", "00:30:00", "00:10:00", "Working")
+    click.echo("A demo schema:\n")
+    click.echo("\n".join(map(lambda x: "    " + x, demo_schema.strip().splitlines())))
 
-Type annotions:
+    click.echo("\nScheduling...")
 
-    from typing import Callable
-    # def at(time_str: str, message: str): ...
-    at: Callable[[str, str], None]
-    # def cycle(start_str: str, end_str: str, work_duration_str: str, rest_duration_str: str, message: str): ...
-    cycle: Callable[[str, str, str, str, str], None]
-""")   
-        
+    tt = TimeTable()
+    tt.load(demo_schema)
+
+    from .prompters.general import ConsolePrompter
+
+    tt.schedule(ConsolePrompter())
 
 
 @click.command()

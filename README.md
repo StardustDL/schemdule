@@ -20,13 +20,13 @@ It's a pure python script, so you can use any python statement in it.
 Schemdule provide `at` and `cycle` functions for registering events.
 
 ```python
-# time_str can be {hh:mm} or {hh:mm:ss}
+# raw_time can be {hh:mm} or {hh:mm:ss} or a datetime.time object
 
-def at(time_str: str, message: str):
+def at(raw_time: Union[str, time], message: str):
     # register an event at time with message
     ...
 
-def cycle(start_str: str, end_str: str, work_duration_str: str, rest_duration_str: str, message: str):
+def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time], raw_rest_duration: Union[str, time], message: str):
     # register a series of events in cycle during start to end
     # the duration of one cycle = work_duration + rest_duration
     # For each cycle, register 3 event: cycle starting, cycle resting, cycle ending
@@ -37,9 +37,10 @@ An example schema.
 
 ```python
 # Type annotions
-from typing import Callable
-at: Callable[[str, str], None]
-cycle: Callable[[str, str, str, str, str], None]
+from typing import Callable, Union
+from datetime import time
+at: Callable[[Union[str, time], str], None]
+cycle: Callable[[Union[str, time], Union[str, time], Union[str, time], Union[str, time], str], None]
 
 # Schema
 at("6:30", "Get up")

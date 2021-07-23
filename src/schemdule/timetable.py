@@ -1,5 +1,5 @@
 from datetime import date, time, datetime, timedelta
-from typing import Optional
+from typing import Optional, Union
 
 import functools
 from queue import deque
@@ -11,7 +11,7 @@ import logging
 from time import sleep
 
 from .prompters import Prompter
-from .timeutils import to_timedelta, subtract_time
+from .timeutils import to_timedelta, subtract_time, parse_time
 
 
 @functools.total_ordering
@@ -61,15 +61,17 @@ class TimeTable:
             current += _rest_duration
 
     def load(self, src: str) -> None:
-        def at(time_str: str, message: str):
-            self.at(time(*list(map(int, time_str.split(':')))), message)
+        def at(raw_time: Union[str, time], message: str):
+            ttime = parse_time(raw_time) if isinstance(raw_time, str) else raw_time
+            self.at(ttime, message)
 
-        def cycle(start_str: str, end_str: str, work_duration_str: str, rest_duration_str: str, message: str):
+        def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time], raw_rest_duration: Union[str, time], message: str):
+            tstart = parse_time(raw_start) if isinstance(raw_start, str) else raw_start
+            tend = parse_time(raw_end) if isinstance(raw_end, str) else raw_end
+            twork_duration = parse_time(raw_work_duration) if isinstance(raw_work_duration, str) else raw_work_duration
+            trest_duration = parse_time(raw_rest_duration) if isinstance(raw_rest_duration, str) else raw_rest_duration
             self.cycle(
-                time(*list(map(int, start_str.split(':')))),
-                time(*list(map(int, end_str.split(':')))),
-                time(*list(map(int, work_duration_str.split(':')))),
-                time(*list(map(int, rest_duration_str.split(':')))),
+                tstart, tend, twork_duration, trest_duration,
                 message)
 
         exec(src, {"at": at, "cycle": cycle})

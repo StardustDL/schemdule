@@ -10,3 +10,6 @@ def to_timedelta(value: time) -> timedelta:
 
 def subtract_time(a: time, b: time) -> timedelta:
     return to_timedelta(a) - to_timedelta(b)
+
+def parse_time(value: str) -> time:
+    time(*list(map(int, map(round, map(float, value.split(':'))))))
