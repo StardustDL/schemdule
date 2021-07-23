@@ -1,6 +1,6 @@
 # Schemdule
 
-![](https://github.com/StardustDL/schemdule/workflows/CI/badge.svg) ![](https://img.shields.io/github/license/StardustDL/schemdule.svg) [![](https://img.shields.io/pypi/dm/schemdule)](https://pypi.org/project/schemdule/)
+![](https://github.com/StardustDL/schemdule/workflows/CI/badge.svg) ![](https://img.shields.io/github/license/StardustDL/schemdule.svg) [![](https://img.shields.io/pypi/dm/schemdule?logo=pypi)](https://pypi.org/project/schemdule/)
 
 [Schemdule](https://github.com/StardustDL/schemdule) is a tiny tool using script for schema to schedule one day and remind you to do something during a day.
 
