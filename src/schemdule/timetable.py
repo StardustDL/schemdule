@@ -37,6 +37,7 @@ class TimeTableItem:
 class TimeTable:
     def __init__(self) -> None:
         self.items: list[TimeTableItem] = []
+        self.prompter: Optional[Prompter] = None
 
     def at(self, time: time, message: str = "") -> None:
         self.items.append(TimeTableItem(time, message))
@@ -59,6 +60,9 @@ class TimeTable:
             self.at(min(current, _end).time(),
                     f"{message} (cycle {index} resting starting)")
             current += _rest_duration
+    
+    def use(self, prompter: Optional[Prompter]) -> None:
+        self.prompter = prompter
 
     def load(self, src: str) -> None:
         def at(raw_time: Union[str, time], message: str):
@@ -117,6 +121,8 @@ class TimeTable:
             return False
 
         click.echo(f"Started Time: {datetime.now().time()}")
+
+        prompter = self.prompter if prompter is None else prompter
 
         if prompter is None:
             from .prompters.general import TkinterPrompter
