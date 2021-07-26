@@ -3,7 +3,7 @@ from typing import Optional
 
 from . import Prompter, PrompterHub
 from .hubs import PrompterBroadcaster, PrompterSwitcher
-from .general import ConsolePrompter, TkinterPrompter
+from .general import ConsolePrompter, TkinterMessageBoxPrompter, MessageBoxPrompter
 
 
 class PrompterConfiger:
@@ -25,7 +25,9 @@ class PrompterConfiger:
 
     def useConsole(self) -> None: self.use(ConsolePrompter())
 
-    def useTkinter(self) -> None: self.use(TkinterPrompter())
+    def useTkinterMessageBox(self) -> None: self.use(TkinterMessageBoxPrompter())
+
+    def useMessageBox(self, auto_close=False) -> None: self.use(MessageBoxPrompter(auto_close))
 
     def build(self) -> Prompter:
         return self._result

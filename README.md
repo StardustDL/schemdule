@@ -17,7 +17,7 @@ $ pip install schemdule
 
 It's a pure python script, so you can use any python statement in it.
 
-Schemdule provide `at`, `cycle`, and `load` functions for registering events, and a `PrompterConfiger` variable named `prompter` to config prompter (the default prompter is Tkinter messagebox).
+Schemdule provide `at`, `cycle`, and `load` functions for registering events, and a `PrompterConfiger` variable named `prompter` to config prompter (the default prompter is messagebox).
 
 ```python
 # raw_time can be {hh:mm} or {hh:mm:ss} or a datetime.time object
@@ -47,7 +47,9 @@ class PrompterConfiger:
 
     def useConsole(self) -> None: ...
 
-    def useTkinter(self) -> None: ...
+    def useTkinterMessageBox(self) -> None: ...
+
+    def useMessageBox(self, auto_close=False) -> None: ...
 
 ```
 

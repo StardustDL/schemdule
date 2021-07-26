@@ -131,8 +131,8 @@ class TimeTable:
         prompter = self.prompter if prompter is None else prompter
 
         if prompter is None:
-            from .prompters.general import TkinterPrompter
-            prompter = TkinterPrompter()
+            from .prompters.general import MessageBoxPrompter
+            prompter = MessageBoxPrompter()
 
         items = deque(sorted(self.items))
 
