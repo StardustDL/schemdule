@@ -17,16 +17,16 @@ $ pip install schemdule
 
 It's a pure python script, so you can use any python statement in it.
 
-Schemdule provide `at`, `cycle`, and `load` functions for registering events.
+Schemdule provide `at`, `cycle`, and `load` functions for registering events, and a `PrompterConfiger` variable named `prompter` to config prompter (the default prompter is Tkinter messagebox).
 
 ```python
 # raw_time can be {hh:mm} or {hh:mm:ss} or a datetime.time object
 
-def at(raw_time: Union[str, time], message: str) -> None:
+def at(raw_time: Union[str, time], message: str = "", payload: Any = None):
     # register an event at time with message
     ...
 
-def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time], raw_rest_duration: Union[str, time], message: str) -> None:
+def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time], raw_rest_duration: Union[str, time], message: str = "", payload: Any = None):
     # register a series of events in cycle during start to end
     # the duration of one cycle = work_duration + rest_duration
     # For each cycle, register 2 event: cycle starting, cycle resting
@@ -35,17 +35,34 @@ def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_durat
 def load(source: str) -> None:
     # load from a schema source code
     ...
+
+# the class of the variable `prompter`
+
+class PrompterConfiger:
+    def use(self, prompter: Prompter) -> None: ...
+
+    def useBroadcaster(self) -> None: ...
+
+    def useSwitcher(self) -> None: ...
+
+    def useConsole(self) -> None: ...
+
+    def useTkinter(self) -> None: ...
+
 ```
 
 An example schema.
 
 ```python
 # Type annotions
-from typing import Callable, Union
+from typing import Callable, Union, Any
 from datetime import time
-at: Callable[[Union[str, time], str], None]
-cycle: Callable[[Union[str, time], Union[str, time], Union[str, time], Union[str, time], str], None]
+from schemdule.prompters.configer import PrompterConfiger
+from schemdule.prompters import Prompter, PrompterHub
+at: Callable[[Union[str, time], str, Any], None]
+cycle: Callable[[Union[str, time], Union[str, time], Union[str, time], Union[str, time], str, Any], None]
 load: Callable[[str], None]
+prompter: PrompterConfiger
 
 # Schema
 at("6:30", "Get up")
@@ -53,6 +70,8 @@ cycle("8:00", "12:00", "00:30:00", "00:10:00", "Working")
 # Import other schema by `load` function
 # with open("other_schema.py", encoding="utf8") as f:
     # load(f.read())
+
+prompter.useTkinter()
 ```
 
 The built timetable is like the following one.
@@ -76,6 +95,14 @@ Working (cycle 6 resting starting) @ 11:50:00
 ### Run
 
 ```sh
-$ schemdule run schema.py
-$ python -m schemdule run schema.py
+# load and run from the schema
+schemdule run schema.py
+# or use python
+# python -m schemdule run schema.py
+
+# preview the built timetable
+schemdule run schema.py --preview
+
+# try the builtin demo (just for testing)
+schemdule demo
 ```

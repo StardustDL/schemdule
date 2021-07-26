@@ -22,6 +22,8 @@ cycle((now + timedelta(seconds=5)).time(),
     (now + timedelta(seconds=20)).time(),
     (now + timedelta(seconds=5)).time(),
     (now + timedelta(seconds=5)).time(), "Demo cycle")
+
+prompter.useConsole()
 """
 
     click.echo("A demo schema:\n")
@@ -33,9 +35,7 @@ cycle((now + timedelta(seconds=5)).time(),
     tt = TimeTable()
     tt.load(demo_schema)
 
-    from .prompters.general import ConsolePrompter
-
-    tt.schedule(ConsolePrompter())
+    tt.schedule()
 
 
 @click.command()
