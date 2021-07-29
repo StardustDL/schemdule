@@ -20,8 +20,8 @@ now = datetime.now()
 at((now + timedelta(seconds=3)).time(), "Demo event")
 cycle((now + timedelta(seconds=5)).time(), 
     (now + timedelta(seconds=20)).time(),
-    (now + timedelta(seconds=5)).time(),
-    (now + timedelta(seconds=5)).time(), "Demo cycle")
+    "00:00:05",
+    "00:00:05", "Demo cycle")
 
 prompter.useConsole()
 """

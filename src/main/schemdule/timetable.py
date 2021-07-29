@@ -12,6 +12,7 @@ from time import sleep
 
 from .prompters import Prompter
 from .prompters.configer import PrompterConfiger
+from .extensions import load_extension
 from .timeutils import to_timedelta, subtract_time, parse_time
 
 
@@ -67,6 +68,8 @@ class TimeTable:
         self.prompter = prompter
 
     def load(self, src: str) -> None:
+        prompterConfiger = PrompterConfiger()
+
         def at(raw_time: Union[str, time], message: str = "", payload: Any = None):
             ttime = parse_time(raw_time) if isinstance(raw_time, str) else raw_time
             self.at(ttime, message, payload)
@@ -82,10 +85,11 @@ class TimeTable:
 
         def load(source: str):
             self.load(source)
+        
+        def ext(name: str):
+            load_extension(name, prompterConfiger)
 
-        prompterConfiger = PrompterConfiger()
-
-        exec(src, {"at": at, "cycle": cycle, "load": load, "prompter": prompterConfiger})
+        exec(src, {"at": at, "cycle": cycle, "load": load, "ext": ext, "prompter": prompterConfiger})
 
         self.prompter = prompterConfiger.build()
 
@@ -131,8 +135,8 @@ class TimeTable:
         prompter = self.prompter if prompter is None else prompter
 
         if prompter is None:
-            from .prompters.general import MessageBoxPrompter
-            prompter = MessageBoxPrompter()
+            from .prompters.general import TkinterMessageBoxPrompter
+            prompter = TkinterMessageBoxPrompter()
 
         items = deque(sorted(self.items))
 
