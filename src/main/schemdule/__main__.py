@@ -4,6 +4,7 @@ import logging
 import enlighten
 import time
 from .timetable import TimeTable
+from . import __version__
 
 
 @click.command()
@@ -44,7 +45,7 @@ prompter.useConsole()
 def run(schema: str, preview: bool = False) -> None:
     logger = logging.getLogger("run")
 
-    click.echo("Welcome to Schemdule!")
+    click.echo(f"Welcome to Schemdule v{__version__}!")
 
     tt = TimeTable()
 

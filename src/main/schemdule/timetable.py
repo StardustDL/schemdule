@@ -12,7 +12,7 @@ from time import sleep
 
 from .prompters import Prompter
 from .prompters.configer import PrompterConfiger
-from .extensions import load_extension
+from .extensions import load_extension, use_extension
 from .timeutils import to_timedelta, subtract_time, parse_time
 
 
@@ -87,7 +87,8 @@ class TimeTable:
             self.load(source)
         
         def ext(name: str):
-            load_extension(name, prompterConfiger)
+            extension = load_extension(name)
+            use_extension(extension, prompterConfiger)
 
         exec(src, {"at": at, "cycle": cycle, "load": load, "ext": ext, "prompter": prompterConfiger})
 
