@@ -22,7 +22,7 @@ class PrompterSwitcher(PrompterHub):
                 return PromptResult.Finished
             elif result is PromptResult.Failed:
                 return PromptResult.Failed
-        
+
         lr = len(results)
 
         if lr == 0:

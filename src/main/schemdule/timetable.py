@@ -63,7 +63,7 @@ class TimeTable:
             self.at(min(current, _end).time(),
                     f"{message} (cycle {index} resting starting)", payload)
             current += _rest_duration
-    
+
     def use(self, prompter: Optional[Prompter]) -> None:
         self.prompter = prompter
 
@@ -73,21 +73,25 @@ class TimeTable:
         env = {}
 
         def at(raw_time: Union[str, time], message: str = "", payload: Any = None):
-            ttime = parse_time(raw_time) if isinstance(raw_time, str) else raw_time
+            ttime = parse_time(raw_time) if isinstance(
+                raw_time, str) else raw_time
             self.at(ttime, message, payload)
 
         def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time], raw_rest_duration: Union[str, time], message: str = "", payload: Any = None):
-            tstart = parse_time(raw_start) if isinstance(raw_start, str) else raw_start
+            tstart = parse_time(raw_start) if isinstance(
+                raw_start, str) else raw_start
             tend = parse_time(raw_end) if isinstance(raw_end, str) else raw_end
-            twork_duration = parse_time(raw_work_duration) if isinstance(raw_work_duration, str) else raw_work_duration
-            trest_duration = parse_time(raw_rest_duration) if isinstance(raw_rest_duration, str) else raw_rest_duration
+            twork_duration = parse_time(raw_work_duration) if isinstance(
+                raw_work_duration, str) else raw_work_duration
+            trest_duration = parse_time(raw_rest_duration) if isinstance(
+                raw_rest_duration, str) else raw_rest_duration
             self.cycle(
                 tstart, tend, twork_duration, trest_duration,
                 message, payload)
 
         def load(source: str):
             exec(source, env)
-        
+
         def ext(name: str):
             extension = load_extension(name)
             use_extension(extension, prompterConfiger)
@@ -110,7 +114,7 @@ class TimeTable:
             if item.time < now:
                 click.echo(f"Outdated: {item.message} @ {item.time}")
                 return True
-            
+
             return False
 
         def pending(item: TimeTableItem, status: enlighten.StatusBar, manager: enlighten.Manager) -> bool:
@@ -124,7 +128,7 @@ class TimeTable:
             pendingTotal = int(round(deltaNow.total_seconds()))
 
             with manager.counter(
-                total=pendingTotal, desc="", unit='ticks', leave=False) as pbar:
+                    total=pendingTotal, desc="", unit='ticks', leave=False) as pbar:
 
                 while True:
                     now = datetime.now().time()
@@ -137,7 +141,7 @@ class TimeTable:
                         count = int(round(delta.total_seconds()))
                         pbar.update((pbar.total - count) - pbar.count)
                     sleep(1)
-            
+
             return False
 
         click.echo(f"Started Time: {datetime.now().time()}")
@@ -152,9 +156,9 @@ class TimeTable:
 
         with enlighten.get_manager() as manager:
             with manager.status_bar('Status',
-                                        color='white_on_cyan',
-                                        justify=enlighten.Justify.CENTER, leave=False) as status:
-                
+                                    color='white_on_cyan',
+                                    justify=enlighten.Justify.CENTER, leave=False) as status:
+
                 while len(items) > 0:
                     item: TimeTableItem = items[0]
 

@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
 from types import ModuleType
 from typing import Any, Dict
-from ..prompters.configer import PrompterConfiger
 import importlib
 
 
-def schemaPrompter(prompter: PrompterConfiger) -> None:
+def schemaEnvironment(env: Dict[str, Any]) -> None:
     pass
 
 
@@ -18,9 +17,7 @@ def load_extension(name: str) -> ModuleType:
 
 
 def use_extension(extension: ModuleType, env: Dict[str, Any]) -> None:
-    configFuncName = "schemaPrompter"
+    configFuncName = "schemaEnvironment"
     if hasattr(extension, configFuncName):
         func = getattr(extension, configFuncName)
-        prompter = env["prompter"]
-        assert isinstance(prompter, PrompterConfiger)
-        func(prompter)
+        func(env)

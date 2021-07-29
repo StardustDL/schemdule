@@ -20,14 +20,17 @@ class PrompterConfiger:
                 f"The prompter is set to a no-hub prompter {type(self._result)}.")
         return self
 
-    def useBroadcaster(self) -> "PrompterConfiger": return self.use(PrompterBroadcaster())
+    def useBroadcaster(self) -> "PrompterConfiger":
+        return self.use(PrompterBroadcaster())
 
-    def useSwitcher(self) -> "PrompterConfiger": return self.use(PrompterSwitcher())
+    def useSwitcher(self) -> "PrompterConfiger":
+        return self.use(PrompterSwitcher())
 
-    def useConsole(self) -> "PrompterConfiger": return self.use(ConsolePrompter())
+    def useConsole(self) -> "PrompterConfiger":
+        return self.use(ConsolePrompter())
 
-    def useTkinterMessageBox(self) -> "PrompterConfiger": return self.use(TkinterMessageBoxPrompter())
+    def useTkinterMessageBox(self) -> "PrompterConfiger":
+        return self.use(TkinterMessageBoxPrompter())
 
     def build(self) -> Prompter:
         return self._result
-
