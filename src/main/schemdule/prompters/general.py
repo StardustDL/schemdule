@@ -6,6 +6,9 @@ from . import Prompter, PromptResult
 
 
 class TkinterMessageBoxPrompter(Prompter):
+    def __init__(self, final: bool = False) -> None:
+        super().__init__(final)
+
     def prompt(self, message: str, payload: Any) -> Any:
         import tkinter
         import tkinter.messagebox
@@ -15,11 +18,27 @@ class TkinterMessageBoxPrompter(Prompter):
         tkinter.messagebox.showinfo(f"Attention {message}", payload)
         top.destroy()
 
-        return PromptResult.Resolved
+        return self.success()
 
 
 class ConsolePrompter(Prompter):
+    def __init__(self, final: bool = False) -> None:
+        super().__init__(final)
+
     def prompt(self, message: str, payload: Any) -> Any:
         click.echo(f"Attention {message}: {payload}")
 
-        return PromptResult.Resolved
+        return self.success()
+
+
+class CallablePrompter(Prompter):
+    def __init__(self, final: bool = False) -> None:
+        super().__init__(final)
+
+    def prompt(self, message: str, payload: Any) -> Any:
+        if callable(payload):
+            result = payload()
+            if isinstance(result, PromptResult):
+                return result
+            return self.success()
+        return PromptResult.Unsupported

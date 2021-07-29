@@ -21,7 +21,7 @@ This extension provide a `MessageBoxPrompter` and add the following extension me
 
 ```python
 class PrompterConfiger:
-    def useMessageBox(self, auto_close=False) -> "PrompterConfiger":
+    def useMessageBox(self, final: bool = False, auto_close: bool = False) -> "PrompterConfiger":
         ...
 ```
 

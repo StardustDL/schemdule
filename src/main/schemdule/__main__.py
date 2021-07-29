@@ -29,7 +29,7 @@ prompter.useConsole()
 
     click.echo("A demo schema:\n")
     click.echo("\n".join(map(lambda x: "    " + x,
-               demo_schema.strip().splitlines())))
+                             demo_schema.strip().splitlines())))
 
     click.echo("\nScheduling...")
 

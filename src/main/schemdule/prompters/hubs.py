@@ -3,8 +3,8 @@ from . import Prompter, PromptResult, PrompterHub
 
 
 class PrompterSwitcher(PrompterHub):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, final: bool = False) -> None:
+        super().__init__(final)
         self.prompters: list[Prompter] = []
 
     def register(self, prompter: Prompter) -> None:
@@ -16,10 +16,13 @@ class PrompterSwitcher(PrompterHub):
         for prompter in self.prompters:
             result = prompter.prompt(message, payload)
 
+            if not isinstance(result, PromptResult):
+                result = PromptResult.Empty
+
             results.append(result)
 
             if result is PromptResult.Finished:
-                return PromptResult.Finished
+                break
             elif result is PromptResult.Failed:
                 return PromptResult.Failed
 
@@ -32,21 +35,22 @@ class PrompterSwitcher(PrompterHub):
         elif len(filter(lambda x: x is PromptResult.Empty)) == lr:
             return PromptResult.Empty
         else:
-            return PromptResult.Resolved
+            return self.success()
 
 
 class PrompterBroadcaster(PrompterHub):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, final: bool = False) -> None:
+        super().__init__(final)
         self.prompters: list[Prompter] = []
 
     def register(self, prompter: Prompter) -> None:
         self.prompters.append(prompter)
 
     def prompt(self, message: str, payload: Any) -> Any:
-        results = []
-
         for prompter in self.prompters:
-            results.append(prompter.prompt(message, payload))
+            result = prompter.prompt(message, payload)
 
-        return results
+            if result is PromptResult.Failed:
+                return PromptResult.Failed
+
+        return self.success()

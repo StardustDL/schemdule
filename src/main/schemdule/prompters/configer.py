@@ -3,7 +3,7 @@ from typing import Optional
 
 from . import Prompter, PrompterHub
 from .hubs import PrompterBroadcaster, PrompterSwitcher
-from .general import ConsolePrompter, TkinterMessageBoxPrompter
+from .general import ConsolePrompter, TkinterMessageBoxPrompter, CallablePrompter
 
 
 class PrompterConfiger:
@@ -20,17 +20,20 @@ class PrompterConfiger:
                 f"The prompter is set to a no-hub prompter {type(self._result)}.")
         return self
 
-    def useBroadcaster(self) -> "PrompterConfiger":
-        return self.use(PrompterBroadcaster())
+    def useBroadcaster(self, final: bool = False) -> "PrompterConfiger":
+        return self.use(PrompterBroadcaster(final))
 
-    def useSwitcher(self) -> "PrompterConfiger":
-        return self.use(PrompterSwitcher())
+    def useSwitcher(self, final: bool = False) -> "PrompterConfiger":
+        return self.use(PrompterSwitcher(final))
 
-    def useConsole(self) -> "PrompterConfiger":
-        return self.use(ConsolePrompter())
+    def useConsole(self, final: bool = False) -> "PrompterConfiger":
+        return self.use(ConsolePrompter(final))
 
-    def useTkinterMessageBox(self) -> "PrompterConfiger":
-        return self.use(TkinterMessageBoxPrompter())
+    def useCallable(self, final: bool = False) -> "PrompterConfiger":
+        return self.use(CallablePrompter(final))
+
+    def useTkinterMessageBox(self, final: bool = False) -> "PrompterConfiger":
+        return self.use(TkinterMessageBoxPrompter(final))
 
     def build(self) -> Prompter:
         return self._result
