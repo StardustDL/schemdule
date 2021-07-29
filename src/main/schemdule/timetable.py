@@ -16,6 +16,12 @@ from .extensions import load_extension, use_extension
 from .timeutils import to_timedelta, subtract_time, parse_time
 
 
+def default_prompter_configer() -> PrompterConfiger:
+    prompter = PrompterConfiger()
+    prompter.useSwitcher().useConsole().useCallable(True).useTkinterMessageBox()
+    return prompter
+
+
 @functools.total_ordering
 class TimeTableItem:
     def __init__(self, time: time, message: str = "", payload: Any = None) -> None:
@@ -68,7 +74,7 @@ class TimeTable:
         self.prompter = prompter
 
     def load(self, src: str) -> None:
-        prompterConfiger = PrompterConfiger()
+        prompterConfiger = default_prompter_configer()
 
         env = {}
 
@@ -149,8 +155,7 @@ class TimeTable:
         prompter = self.prompter if prompter is None else prompter
 
         if prompter is None:
-            from .prompters.general import TkinterMessageBoxPrompter
-            prompter = TkinterMessageBoxPrompter()
+            prompter = default_prompter_configer().build()
 
         items = deque(sorted(self.items))
 

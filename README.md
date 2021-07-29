@@ -19,7 +19,7 @@ $ pip install schemdule
 
 It's a pure python script, so you can use any python statement in it.
 
-Schemdule provide `at`, `cycle`, `load` and `ext` functions for registering events, and a `PrompterConfiger` variable named `prompter` to config prompter (the default prompter is Tkinter messagebox).
+Schemdule provide `at`, `cycle`, `load` and `ext` functions for registering events, and a `PrompterConfiger` variable named `prompter` to config prompter.
 
 > These functions and variable can be accessed and modified in the variable `env`, a dict for these items provided by Schemdule. You can change the `env` variable to change the execute environment for `load` function.
 
@@ -59,6 +59,15 @@ class PrompterConfiger:
     def useCallable(self, final: bool = False) -> "PrompterConfiger": ...
 
     def useTkinterMessageBox(self, final: bool = False) -> "PrompterConfiger": ...
+
+    def clear(self) -> "PrompterConfiger": ...
+
+# the default value of the variable `prompter`
+
+def default_prompter_configer() -> PrompterConfiger:
+    prompter = PrompterConfiger()
+    prompter.useSwitcher().useConsole().useCallable(True).useTkinterMessageBox()
+    return prompter
 ```
 
 An example schema.

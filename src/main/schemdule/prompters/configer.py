@@ -34,6 +34,10 @@ class PrompterConfiger:
 
     def useTkinterMessageBox(self, final: bool = False) -> "PrompterConfiger":
         return self.use(TkinterMessageBoxPrompter(final))
+    
+    def clear(self) -> "PrompterConfiger":
+        self._result = None
+        return self
 
     def build(self) -> Prompter:
         return self._result

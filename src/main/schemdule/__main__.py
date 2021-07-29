@@ -24,7 +24,7 @@ cycle((now + timedelta(seconds=5)).time(),
     "00:00:05",
     "00:00:05", "Demo cycle")
 
-prompter.useConsole()
+prompter.clear().useConsole()
 """
 
     click.echo("A demo schema:\n")
