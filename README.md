@@ -1,18 +1,19 @@
 # Schemdule
 
-![](https://github.com/StardustDL/schemdule/workflows/CI/badge.svg) ![](https://img.shields.io/github/license/StardustDL/schemdule.svg) [![](https://img.shields.io/pypi/v/schemdule.svg?logo=pypi)](https://pypi.org/project/schemdule/) ![](https://img.shields.io/pypi/dm/schemdule?logo=pypi)
+![](https://github.com/StardustDL/schemdule/workflows/CI/badge.svg) ![](https://img.shields.io/github/license/StardustDL/schemdule.svg) [![](https://img.shields.io/pypi/v/schemdule.svg?logo=pypi)](https://pypi.org/project/schemdule/) [![Downloads](https://pepy.tech/badge/schemdule)](https://pepy.tech/project/schemdule)
 
 [Schemdule](https://github.com/StardustDL/schemdule) is a tiny tool using script as schema to schedule one day and remind you to do something during a day.
 
 - Platform ![](https://img.shields.io/badge/Linux-yes-success?logo=linux) ![](https://img.shields.io/badge/Windows-yes-success?logo=windows) ![](https://img.shields.io/badge/MacOS-yes-success?logo=apple) ![](https://img.shields.io/badge/BSD-yes-success?logo=freebsd)
 - Python ![](https://img.shields.io/pypi/implementation/schemdule.svg?logo=pypi) ![](https://img.shields.io/pypi/pyversions/schemdule.svg?logo=pypi) ![](https://img.shields.io/pypi/wheel/schemdule.svg?logo=pypi)
-- [All extensions](https://pypi.org/search/?q=schemdule)
 
-## Usage
+## Install
 
 ```sh
 $ pip install schemdule
 ```
+
+## Usage
 
 ### Write a Schema
 
@@ -116,3 +117,8 @@ schemdule run schema.py --preview
 # try the builtin demo (just for testing)
 schemdule demo
 ```
+
+## Extensions
+
+- [SimpleGUI](https://github.com/StardustDL/schemdule/tree/master/src/extensions/simplegui) [![](https://img.shields.io/pypi/v/schemdule-extensions-simplegui.svg?logo=pypi)](https://pypi.org/project/schemdule-extensions-simplegui/) [![Downloads](https://pepy.tech/badge/schemdule-extensions-simplegui)](https://pepy.tech/project/schemdule)
+- [All extensions on PyPI](https://pypi.org/search/?q=schemdule)
