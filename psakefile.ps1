@@ -21,11 +21,11 @@ Task Build -depends Restore {
         Exec { python -m build -o ../../../dist }
         Set-Location ..
     }
-    Set-Location ..
+    Set-Location ../..
 }
 
 Task Deploy -depends Build {
-    Exec { python -m twine upload --skip-existing --repository pypi dist/* }
+    Exec { python -m twine upload --skip-existing --repository pypi "dist/*" }
 }
 
 Task Install {
