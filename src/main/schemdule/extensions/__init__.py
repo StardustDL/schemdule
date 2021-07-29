@@ -5,7 +5,7 @@ from ..prompters.configer import PrompterConfiger
 import importlib
 
 
-def schemaPrompter(prompter: PrompterConfiger):
+def schemaPrompter(prompter: PrompterConfiger) -> None:
     pass
 
 
@@ -17,8 +17,10 @@ def load_extension(name: str) -> ModuleType:
     return import_extension(f"schemdule.extensions.{name}")
 
 
-def use_extension(extension: ModuleType, prompter: PrompterConfiger) -> None:
+def use_extension(extension: ModuleType, env: Dict[str, Any]) -> None:
     configFuncName = "schemaPrompter"
     if hasattr(extension, configFuncName):
         func = getattr(extension, configFuncName)
+        prompter = env["prompter"]
+        assert isinstance(prompter, PrompterConfiger)
         func(prompter)

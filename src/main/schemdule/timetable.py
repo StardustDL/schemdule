@@ -70,6 +70,8 @@ class TimeTable:
     def load(self, src: str) -> None:
         prompterConfiger = PrompterConfiger()
 
+        env = {}
+
         def at(raw_time: Union[str, time], message: str = "", payload: Any = None):
             ttime = parse_time(raw_time) if isinstance(raw_time, str) else raw_time
             self.at(ttime, message, payload)
@@ -84,13 +86,20 @@ class TimeTable:
                 message, payload)
 
         def load(source: str):
-            self.load(source)
+            exec(source, env)
         
         def ext(name: str):
             extension = load_extension(name)
             use_extension(extension, prompterConfiger)
 
-        exec(src, {"at": at, "cycle": cycle, "load": load, "ext": ext, "prompter": prompterConfiger})
+        env["at"] = at
+        env["cycle"] = cycle
+        env["load"] = load
+        env["ext"] = ext
+        env["prompter"] = prompterConfiger
+        env["env"] = env
+
+        exec(src, env)
 
         self.prompter = prompterConfiger.build()
 

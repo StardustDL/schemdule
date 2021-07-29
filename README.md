@@ -21,6 +21,8 @@ It's a pure python script, so you can use any python statement in it.
 
 Schemdule provide `at`, `cycle`, `load` and `ext` functions for registering events, and a `PrompterConfiger` variable named `prompter` to config prompter (the default prompter is Tkinter messagebox).
 
+> These functions and variable can be accessed and modified in the variable `env`, a dict for these items provided by Schemdule. You can change the `env` variable to change the execute environment for `load` function.
+
 ```python
 # raw_time can be {hh:mm} or {hh:mm:ss} or a datetime.time object
 
@@ -55,14 +57,13 @@ class PrompterConfiger:
     def useConsole(self) -> "PrompterConfiger": ...
 
     def useTkinterMessageBox(self) -> "PrompterConfiger": ...
-
 ```
 
 An example schema.
 
 ```python
 # Type annotions
-from typing import Callable, Union, Any
+from typing import Callable, Union, Any, Dict
 from datetime import time
 from schemdule.prompters.configer import PrompterConfiger
 from schemdule.prompters import Prompter, PrompterHub
@@ -71,6 +72,7 @@ cycle: Callable[[Union[str, time], Union[str, time], Union[str, time], Union[str
 load: Callable[[str], None]
 ext: Callable[[str], None]
 prompter: PrompterConfiger
+env: Dict[str, Any]
 
 # Schema
 at("6:30", "Get up")
