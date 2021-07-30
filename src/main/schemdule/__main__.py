@@ -3,7 +3,8 @@ import click
 import logging
 import enlighten
 import time
-from .timetable import TimeTable
+from .schemas import SchemaBuilder
+from .schedulers import Scheduler
 from . import __version__
 
 
@@ -33,10 +34,12 @@ prompter.clear().useConsole()
 
     click.echo("\nScheduling...")
 
-    tt = TimeTable()
+    tt = SchemaBuilder()
+    sc = Scheduler()
+
     tt.load(demo_schema)
 
-    tt.schedule()
+    sc.schedule(tt.result)
 
 
 @click.command()
@@ -47,16 +50,17 @@ def run(schema: str, preview: bool = False) -> None:
 
     click.echo(f"Welcome to Schemdule v{__version__}!")
 
-    tt = TimeTable()
+    tt = SchemaBuilder()
 
     with open(schema, encoding="utf8") as f:
         tt.load(f.read())
 
     if preview:
-        for item in sorted(tt.items):
+        for item in sorted(tt.result.items):
             click.echo(f"{item.message} @ {item.time}")
     else:
-        tt.schedule()
+        sc = Scheduler()
+        sc.schedule(tt.result)
 
 
 @click.group()

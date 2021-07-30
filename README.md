@@ -133,5 +133,5 @@ schemdule demo
 
 ## Extensions
 
-- [SimpleGUI](https://github.com/StardustDL/schemdule/tree/master/src/extensions/simplegui) [![](https://img.shields.io/pypi/v/schemdule-extensions-simplegui.svg?logo=pypi)](https://pypi.org/project/schemdule-extensions-simplegui/) [![Downloads](https://pepy.tech/badge/schemdule-extensions-simplegui)](https://pepy.tech/project/schemdule)
+- [SimpleGUI](https://github.com/StardustDL/schemdule/tree/master/src/extensions/simplegui) [![](https://img.shields.io/pypi/v/schemdule-extensions-simplegui.svg?logo=pypi)](https://pypi.org/project/schemdule-extensions-simplegui/) [![Downloads](https://pepy.tech/badge/schemdule-extensions-simplegui)](https://pepy.tech/project/schemdule-extensions-simplegui)
 - [All extensions on PyPI](https://pypi.org/search/?q=schemdule)
