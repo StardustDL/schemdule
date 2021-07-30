@@ -16,11 +16,14 @@ from ..timeutils import subtract_time
 
 
 class Scheduler:
+    _logger = logging.getLogger("Scheduler")
+
     def schedule(self, timetable: TimeTable, prompter: Optional[Prompter] = None) -> None:
         def outdating(item: TimeTableItem) -> bool:
             now = datetime.now().time()
 
             if item.time < now:
+                self._logger.info(f"Outdated: {item}.")
                 click.echo(f"Outdated: {item.message} @ {item.time}")
                 return True
 
@@ -32,6 +35,7 @@ class Scheduler:
             if item.time <= now:
                 return False
 
+            self._logger.info(f"Pending: {item}.")
             status.update(f"Pending: {item.message} @ {item.time}")
             deltaNow = subtract_time(item.time, now)
             pendingTotal = int(round(deltaNow.total_seconds()))
@@ -42,8 +46,10 @@ class Scheduler:
                 while True:
                     now = datetime.now().time()
                     if item.time <= now:
+                        self._logger.info(f"Occurring: {item}.")
                         click.echo(f"Attention: {item.message} @ {item.time}")
-                        prompter.prompt(item.message, item.payload)
+                        result = prompter.prompt(item.message, item.payload)
+                        self._logger.info(f"Prompting result: {result}.")
                         return True
                     else:
                         delta = subtract_time(item.time, now)
@@ -53,12 +59,15 @@ class Scheduler:
 
             return False
 
+        self._logger.info(f"Start scheduling.")
         click.echo(f"Started Time: {datetime.now().time()}")
 
         prompter = timetable.prompter if prompter is None else prompter
 
         if prompter is None:
             prompter = default_prompter_configer().build()
+
+        self._logger.info(f"Used prompter: {prompter}.")
 
         items = deque(sorted(timetable.items))
 

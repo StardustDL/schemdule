@@ -22,6 +22,8 @@ def default_prompter_configer() -> PrompterConfiger:
 
 
 class SchemaBuilder:
+    _logger = logging.getLogger("SchemaBuilder")
+
     def __init__(self) -> None:
         self.result: TimeTable = TimeTable()
 
@@ -48,14 +50,18 @@ class SchemaBuilder:
                 message, payload)
 
         def load(source: str):
+            src_preview = source[:50].replace('\n', ' ').replace('\r', ' ')
+            self._logger.info(f"Load: '{src_preview}...'")
             exec(source, env)
 
         def ext(name: Optional[str] = None):
             if name is None:
+                self._logger.info("Use all installed extensions.")
                 extnames = find_extensions()
                 exts = load_extensions(extnames)
                 use_extensions(exts, env)
             else:
+                self._logger.info(f"Use extension {name}.")
                 extension = load_extension(name)
                 use_extension(extension, env)
 

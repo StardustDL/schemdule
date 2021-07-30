@@ -77,14 +77,19 @@ def main(verbose: int = 0) -> None:
 
 A tiny tool using script as schema to schedule one day and remind you to do something during a day.
 """
+    logger = logging.getLogger("Cli-Main")
 
-    logging.basicConfig(level={
+    loggingLevel = {
         0: logging.ERROR,
         1: logging.WARNING,
         2: logging.INFO,
         3: logging.DEBUG,
         4: logging.NOTSET
-    }[verbose])
+    }[verbose]
+
+    logging.basicConfig(level=loggingLevel)
+
+    logger.debug(f"Logging level: {loggingLevel}")
 
 
 main.add_command(run)

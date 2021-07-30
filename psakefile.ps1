@@ -53,7 +53,7 @@ Task Uninstall {
 }
 
 Task Demo {
-    Exec { python -m schemdule demo }
+    Exec { python -m schemdule -vvv demo }
     Exec { schemdule demo }
 }
 

@@ -22,6 +22,9 @@ class Prompter(ABC):
     def prompt(self, message: str, payload: Any) -> Any:
         pass
 
+    def __repr__(self) -> str:
+        return type(self).__name__
+
 
 class PrompterHub(Prompter, ABC):
     @abstractmethod

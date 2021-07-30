@@ -1,10 +1,13 @@
 from abc import ABC, abstractmethod
+import logging
 from types import ModuleType
 from typing import Any, Dict, List, Set
 import importlib
 import pkgutil
 
 EXTENSION_MODULE_PREFIX = "schemdule.extensions."
+
+_logger = logging.getLogger("extensions")
 
 
 def schemaEnvironment(env: Dict[str, Any]) -> None:
@@ -16,10 +19,12 @@ def find_extensions() -> List[str]:
 
 
 def import_extension(full_name: str) -> ModuleType:
+    _logger.debug(f"Import extension {full_name}.")
     return importlib.import_module(f"{full_name}.__reg__")
 
 
 def load_extension(name: str) -> ModuleType:
+    _logger.info(f"Load extension {name}.")
     return import_extension(f"schemdule.extensions.{name}")
 
 
@@ -28,6 +33,8 @@ def load_extensions(names: List[str]) -> List[ModuleType]:
 
 
 def use_extension(extension: ModuleType, env: Dict[str, Any]) -> None:
+    _logger.info(
+        f"Use extension {extension.__name__.replace('__reg__', '', 1)}.")
     configFuncName = "schemaEnvironment"
     if hasattr(extension, configFuncName):
         func = getattr(extension, configFuncName)

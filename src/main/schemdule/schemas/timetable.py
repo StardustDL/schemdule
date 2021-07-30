@@ -38,17 +38,23 @@ class TimeTableItem:
 
 
 class TimeTable:
+    _logger = logging.getLogger("TimeTable")
+
     def __init__(self) -> None:
         self.items: list[TimeTableItem] = []
         self.prompter: Optional[Prompter] = None
 
     def use(self, prompter: Optional[Prompter]) -> None:
+        self._logger.debug(f"Use prompter {prompter}.")
         self.prompter = prompter
 
     def at(self, time: time, message: str = "", payload: Any = None) -> None:
+        self._logger.debug(f"{message} ({payload}) at {time}.")
         self.items.append(TimeTableItem(time, message, payload))
 
     def cycle(self, start: time, end: time, work_duration: time, rest_duration: time, message: str = "", payload: Any = None) -> None:
+        self._logger.debug(
+            f"{message} ({payload}) cycle from {start} to {end} (work {work_duration}, rest {rest_duration}).")
         _start = datetime(2000, 1, 1) + to_timedelta(start)
         _end = datetime(2000, 1, 1) + to_timedelta(end)
         _work_duration = to_timedelta(work_duration)
