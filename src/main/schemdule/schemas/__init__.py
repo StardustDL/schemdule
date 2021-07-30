@@ -10,7 +10,7 @@ import logging
 
 from ..prompters import Prompter
 from ..prompters.configer import PrompterConfiger
-from ..extensions import load_extension, use_extension
+from ..extensions import load_extension, use_extension, find_extensions, load_extensions, use_extensions
 from ..timeutils import to_timedelta, subtract_time, parse_time
 from .timetable import TimeTable, TimeTableItem
 
@@ -50,9 +50,14 @@ class SchemaBuilder:
         def load(source: str):
             exec(source, env)
 
-        def ext(name: str):
-            extension = load_extension(name)
-            use_extension(extension, env)
+        def ext(name: Optional[str] = None):
+            if name is None:
+                extnames = find_extensions()
+                exts = load_extensions(extnames)
+                use_extensions(exts, env)
+            else:
+                extension = load_extension(name)
+                use_extension(extension, env)
 
         env["at"] = at
         env["cycle"] = cycle

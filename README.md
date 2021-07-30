@@ -9,8 +9,20 @@
 
 ## Install
 
+Use pip:
+
 ```sh
-$ pip install schemdule
+pip install schemdule
+```
+
+Or use pipx:
+
+```sh
+# Install pipx
+pip install --user pipx
+pipx ensurepath
+
+pipx install schemdule
 ```
 
 ## Usage
@@ -40,8 +52,8 @@ def load(source: str) -> None:
     # load from a schema source code
     ...
 
-def ext(name: str) -> None:
-    # use an extension
+def ext(name: Optional[str] = None):
+    # use an extension or use all installed extensions (if name is None)
     # provided by packages `schemdule-extensions-{extension name}`
     ...
 
