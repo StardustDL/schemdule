@@ -30,9 +30,9 @@ class PrompterSwitcher(PrompterHub):
 
         if lr == 0:
             return PromptResult.Empty
-        elif len(filter(lambda x: x is PromptResult.Unsupported)) == lr:
+        elif len([x for x in results if x is PromptResult.Unsupported]) == lr:
             return PromptResult.Unsupported
-        elif len(filter(lambda x: x is PromptResult.Empty)) == lr:
+        elif len([x for x in results if x is PromptResult.Empty]) == lr:
             return PromptResult.Empty
         else:
             return self.success()
