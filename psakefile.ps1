@@ -53,8 +53,16 @@ Task Uninstall {
 }
 
 Task Demo {
-    Exec { python -m schemdule -vvv demo }
-    Exec { schemdule demo }
+    Write-Output "Version"
+    Exec { schemdule --version }
+    Write-Output "Help"
+    Exec { schemdule --help }
+    Write-Output "Extensions"
+    Exec { schemdule ext }
+    Write-Output "Demo"
+    Exec { python -m schemdule demo }
+    Write-Output "Demo in verbose"
+    Exec { schemdule -vvv demo }
 }
 
 Task Test -depends Install, Demo, Uninstall

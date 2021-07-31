@@ -11,8 +11,22 @@ A simple GUI extension for
 
 ## Install
 
+Use pip:
+
 ```sh
-$ pip install schemdule-extensions-simplegui
+pip install schemdule-extensions-simplegui
+```
+
+Or use pipx:
+
+```sh
+pipx inject schemdule schemdule-extensions-simplegui
+```
+
+Check if the extension installed:
+
+```sh
+schemdule ext
 ```
 
 ## Usage
