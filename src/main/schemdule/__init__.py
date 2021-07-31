@@ -3,7 +3,7 @@ import logging
 import click
 import enlighten
 
-__version__ = "0.0.6"
+__version__ = "0.0.7"
 
 
 def get_app_directory():

@@ -22,14 +22,74 @@ Or use pipx:
 pip install --user pipx
 pipx ensurepath
 
+# Install Schemdule
 pipx install schemdule
+
+# Install extension
+pipx inject schemdule schemdule-extensions-{extension name}
+
+# Upgrade
+pipx upgrade schemdule --include-injected
 ```
 
 ## Usage
 
 ### Write a Schema
 
-It's a pure python script, so you can use any python statement in it.
+An example schema.
+
+```python
+# Schema
+at("6:30", "Get up")
+cycle("8:00", "12:00", "00:30:00", "00:10:00", "Working")
+# Import other schema by `load` function
+# with open("other_schema.py", encoding="utf8") as f:
+    # load(f.read())
+
+prompter.useTkinterMessageBox()
+
+# ext("simplegui") # use simplegui extension (package schemdule-extensions-simplegui)
+
+# use multiple prompter:
+# prompter.useBroadcaster().useConsole().useMessageBox(True)
+```
+
+The built timetable is like the following one.
+
+```
+Get up @ 06:30:00
+Working (cycle 1 starting) @ 08:00:00
+Working (cycle 1 resting starting) @ 08:30:00
+Working (cycle 2 starting) @ 08:40:00
+Working (cycle 2 resting starting) @ 09:10:00
+Working (cycle 3 starting) @ 09:20:00
+Working (cycle 3 resting starting) @ 09:50:00
+Working (cycle 4 starting) @ 10:00:00
+Working (cycle 4 resting starting) @ 10:30:00
+Working (cycle 5 starting) @ 10:40:00
+Working (cycle 5 resting starting) @ 11:10:00
+Working (cycle 6 starting) @ 11:20:00
+Working (cycle 6 resting starting) @ 11:50:00
+```
+
+### Run
+
+```sh
+# load and run from the schema
+schemdule run schema.py
+# or use python
+# python -m schemdule run schema.py
+
+# preview the built timetable
+schemdule run schema.py --preview
+
+# try the builtin demo (just for testing)
+schemdule demo
+```
+
+## Schema Specification
+
+Schema is a pure python script, so you can use any python statement in it.
 
 Schemdule provide `at`, `cycle`, `load` and `ext` functions for registering events, and a `PrompterConfiger` variable named `prompter` to config prompter.
 
@@ -82,7 +142,7 @@ def default_prompter_configer() -> PrompterConfiger:
     return prompter
 ```
 
-An example schema.
+Here are the type annotions for schema.
 
 ```python
 # Type annotions
@@ -96,51 +156,6 @@ load: Callable[[str], None]
 ext: Callable[[str], None]
 prompter: PrompterConfiger
 env: Dict[str, Any]
-
-# Schema
-at("6:30", "Get up")
-cycle("8:00", "12:00", "00:30:00", "00:10:00", "Working")
-# Import other schema by `load` function
-# with open("other_schema.py", encoding="utf8") as f:
-    # load(f.read())
-
-prompter.useTkinterMessageBox()
-# use multiple prompter:
-# ext("simplegui") # use simplegui extension (package schemdule-extensions-simplegui)
-# prompter.useBroadcaster().useConsole().useMessageBox(True)
-```
-
-The built timetable is like the following one.
-
-```
-Get up @ 06:30:00
-Working (cycle 1 starting) @ 08:00:00
-Working (cycle 1 resting starting) @ 08:30:00
-Working (cycle 2 starting) @ 08:40:00
-Working (cycle 2 resting starting) @ 09:10:00
-Working (cycle 3 starting) @ 09:20:00
-Working (cycle 3 resting starting) @ 09:50:00
-Working (cycle 4 starting) @ 10:00:00
-Working (cycle 4 resting starting) @ 10:30:00
-Working (cycle 5 starting) @ 10:40:00
-Working (cycle 5 resting starting) @ 11:10:00
-Working (cycle 6 starting) @ 11:20:00
-Working (cycle 6 resting starting) @ 11:50:00
-```
-
-### Run
-
-```sh
-# load and run from the schema
-schemdule run schema.py
-# or use python
-# python -m schemdule run schema.py
-
-# preview the built timetable
-schemdule run schema.py --preview
-
-# try the builtin demo (just for testing)
-schemdule demo
 ```
 
 ## Extensions
