@@ -10,6 +10,7 @@ from . import __version__
 
 @click.command()
 def demo():
+    """Try a schema scheduling demo."""
     click.echo("""
 Please give a schema file:
 
@@ -50,9 +51,10 @@ prompter.clear().useSwitcher().useConsole().useCallable()
 
 
 @click.command()
-@click.option("--preview/--no-preview", default=False, help="Preview the built timetable.")
+@click.option("--preview", is_flag=True, default=False, help="Preview the built timetable.")
 @click.argument("schema", type=click.Path(exists=True))
 def run(schema: str, preview: bool = False) -> None:
+    """Schedule a schema."""
     logger = logging.getLogger("run")
 
     click.echo(f"Welcome to Schemdule v{__version__}!")
@@ -70,9 +72,28 @@ def run(schema: str, preview: bool = False) -> None:
         sc.schedule(tt.result)
 
 
-@click.group()
+@click.command()
+def ext() -> None:
+    """List all installed extensions."""
+    logger = logging.getLogger("ext")
+
+    from .extensions import find_extensions, load_extension, get_extension_metadata
+
+    extnames = find_extensions()
+
+    click.echo(f"Found {len(extnames)} extension(s).")
+
+    for name in extnames:
+        ext = load_extension(name)
+        metadata = get_extension_metadata(ext)
+        click.echo(f"  {name} v{metadata['version']}")
+
+
+@click.group(invoke_without_command=True)
+@click.pass_context
 @click.option('-v', '--verbose', count=True, default=0, type=click.IntRange(0, 4))
-def main(verbose: int = 0) -> None:
+@click.option("--version", is_flag=True, default=False, help="Show the version.")
+def main(ctx, verbose: int = 0, version: bool = False) -> None:
     """Schemdule (https://github.com/StardustDL/schemdule)
 
 A tiny tool using script as schema to schedule one day and remind you to do something during a day.
@@ -91,9 +112,14 @@ A tiny tool using script as schema to schedule one day and remind you to do some
 
     logger.debug(f"Logging level: {loggingLevel}")
 
+    if version:
+        click.echo(f"Schemdule v{__version__}")
+        exit(0)
+
 
 main.add_command(run)
 main.add_command(demo)
+main.add_command(ext)
 
 if __name__ == '__main__':
     main()

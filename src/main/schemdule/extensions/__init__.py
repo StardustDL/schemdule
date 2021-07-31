@@ -44,3 +44,8 @@ def use_extension(extension: ModuleType, env: Dict[str, Any]) -> None:
 def use_extensions(extensions: List[ModuleType], env: Dict[str, Any]) -> None:
     for extension in extensions:
         use_extension(extension, env)
+
+
+def get_extension_metadata(extension: ModuleType) -> None:
+    version = getattr(extension, "__version__", None)
+    return {"version": version}
