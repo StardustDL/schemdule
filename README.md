@@ -146,14 +146,14 @@ Here are the type annotions for schema.
 
 ```python
 # Type annotions
-from typing import Callable, Union, Any, Dict
+from typing import Callable, Union, Any, Dict, Optional
 from datetime import time
 from schemdule.prompters.configer import PrompterConfiger
 from schemdule.prompters import Prompter, PrompterHub
 at: Callable[[Union[str, time], str, Any], None]
 cycle: Callable[[Union[str, time], Union[str, time], Union[str, time], Union[str, time], str, Any], None]
 load: Callable[[str], None]
-ext: Callable[[str], None]
+ext: Callable[[Optional[str]], None]
 prompter: PrompterConfiger
 env: Dict[str, Any]
 ```
@@ -161,4 +161,5 @@ env: Dict[str, Any]
 ## Extensions
 
 - [SimpleGUI](https://github.com/StardustDL/schemdule/tree/master/src/extensions/simplegui) [![](https://img.shields.io/pypi/v/schemdule-extensions-simplegui.svg?logo=pypi)](https://pypi.org/project/schemdule-extensions-simplegui/) [![Downloads](https://pepy.tech/badge/schemdule-extensions-simplegui)](https://pepy.tech/project/schemdule-extensions-simplegui)
+- [Miaotixing](https://github.com/StardustDL/schemdule/tree/master/src/extensions/miaotixing) [![](https://img.shields.io/pypi/v/schemdule-extensions-miaotixing.svg?logo=pypi)](https://pypi.org/project/schemdule-extensions-miaotixing/) [![Downloads](https://pepy.tech/badge/schemdule-extensions-miaotixing)](https://pepy.tech/project/schemdule-extensions-miaotixing)
 - [All extensions on PyPI](https://pypi.org/search/?q=schemdule)
