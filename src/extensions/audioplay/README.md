@@ -14,6 +14,9 @@ A audio player extension for
 Use pip:
 
 ```sh
+# dependencies on Linux (only) for simpleaudio package
+sudo apt-get install -y python3-dev libasound2-dev
+
 pip install schemdule-extensions-audioplay
 ```
 

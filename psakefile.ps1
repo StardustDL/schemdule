@@ -30,6 +30,12 @@ Task Deploy -depends Build {
 
 Task Install {
     Set-Location ./dist
+
+    Write-Output "Install dependencies"
+    if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Linux)) {
+        Exec { sudo apt-get install -y python3-dev libasound2-dev }
+    }
+
     Write-Output "Install main"
     Exec { python -m pip install $(Get-Childitem "schemdule-*.whl")[0] }
 
