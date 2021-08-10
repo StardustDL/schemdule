@@ -77,3 +77,7 @@ Task Clean {
         Remove-Item -Recurse $egg
     }
 }
+
+Task Format {
+    autopep8 -r --in-place .
+}

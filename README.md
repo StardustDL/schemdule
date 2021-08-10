@@ -43,8 +43,7 @@ An example schema.
 at("6:30", "Get up")
 cycle("8:00", "12:00", "00:30:00", "00:10:00", "Working")
 # Import other schema by `load` function
-# with open("other_schema.py", encoding="utf8") as f:
-    # load(f.read())
+# load("other_schema.py")
 
 prompter.useTkinterMessageBox()
 
@@ -108,8 +107,8 @@ def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_durat
     # For each cycle, register 2 event: cycle starting, cycle resting
     ...
 
-def load(source: str) -> None:
-    # load from a schema source code
+def load(file: str, encoding: str = "utf8") -> None:
+    # load from a schema source code file
     ...
 
 def ext(name: Optional[str] = None):

@@ -49,7 +49,9 @@ class SchemaBuilder:
                 tstart, tend, twork_duration, trest_duration,
                 message, payload)
 
-        def load(source: str):
+        def load(file: str, encoding: str = "utf8"):
+            with open(file, encoding=encoding) as f:
+                source = f.read()
             src_preview = source[:50].replace('\n', ' ').replace('\r', ' ')
             self._logger.info(f"Load: '{src_preview}...'")
             exec(source, env)
