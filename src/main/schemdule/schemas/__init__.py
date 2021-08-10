@@ -32,12 +32,12 @@ class SchemaBuilder:
 
         env = {}
 
-        def at(raw_time: Union[str, time], message: str = "", payload: Any = None):
+        def at(raw_time: Union[str, time], message: str = "", payload: Any = None) -> None:
             ttime = parse_time(raw_time) if isinstance(
                 raw_time, str) else raw_time
             self.result.at(ttime, message, payload)
 
-        def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time], raw_rest_duration: Union[str, time], message: str = "", payload: Any = None):
+        def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time], raw_rest_duration: Union[str, time], message: str = "", payload: Any = None) -> None:
             tstart = parse_time(raw_start) if isinstance(
                 raw_start, str) else raw_start
             tend = parse_time(raw_end) if isinstance(raw_end, str) else raw_end
@@ -48,15 +48,18 @@ class SchemaBuilder:
             self.result.cycle(
                 tstart, tend, twork_duration, trest_duration,
                 message, payload)
-
-        def load(file: str, encoding: str = "utf8"):
-            with open(file, encoding=encoding) as f:
-                source = f.read()
+        
+        def load_raw(source: str) -> None:
             src_preview = source[:50].replace('\n', ' ').replace('\r', ' ')
             self._logger.info(f"Load: '{src_preview}...'")
             exec(source, env)
 
-        def ext(name: Optional[str] = None):
+        def load(file: str, encoding: str = "utf8") -> None:
+            with open(file, encoding=encoding) as f:
+                source = f.read()
+            load_raw(source)
+
+        def ext(name: Optional[str] = None) -> None:
             if name is None:
                 self._logger.info("Use all installed extensions.")
                 extnames = find_extensions()
@@ -70,6 +73,7 @@ class SchemaBuilder:
         env["at"] = at
         env["cycle"] = cycle
         env["load"] = load
+        env["load_raw"] = load_raw
         env["ext"] = ext
         env["prompter"] = prompterConfiger
         env["env"] = env
@@ -82,7 +86,7 @@ class SchemaBuilder:
             self.result.use(prompter.build())
 
     def load_with_env(self, src: str, env: Dict[str, Any]) -> None:
-        env["load"](src)
+        env["load_raw"](src)
         self.use_env(env)
 
     def load(self, src) -> None:

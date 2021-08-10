@@ -5,8 +5,8 @@ from types import MethodType
 from . import __version__
 
 
-def useMessageBox(self, final: bool = False, auto_close: bool = False) -> PrompterConfiger:
-    return self.use(MessageBoxPrompter(final, auto_close))
+def useMessageBox(self, auto_close: bool = False, final: bool = False) -> PrompterConfiger:
+    return self.use(MessageBoxPrompter(auto_close, final))
 
 
 PrompterConfiger.useMessageBox = useMessageBox

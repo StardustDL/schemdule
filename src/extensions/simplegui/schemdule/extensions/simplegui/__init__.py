@@ -2,11 +2,11 @@ import PySimpleGUI as sg
 from typing import Any
 from schemdule.prompters import Prompter, PromptResult
 
-__version__ = "0.0.7"
+__version__ = "0.0.8"
 
 
 class MessageBoxPrompter(Prompter):
-    def __init__(self, final: bool = False, auto_close: bool = False) -> None:
+    def __init__(self, auto_close: bool = False, final: bool = False) -> None:
         super().__init__(final)
         self.auto_close = auto_close
 

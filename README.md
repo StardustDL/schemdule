@@ -97,21 +97,25 @@ Schemdule provide `at`, `cycle`, `load` and `ext` functions for registering even
 ```python
 # raw_time can be {hh:mm} or {hh:mm:ss} or a datetime.time object
 
-def at(raw_time: Union[str, time], message: str = "", payload: Any = None):
+def at(raw_time: Union[str, time], message: str = "", payload: Any = None) -> None:
     # register an event at time with message
     ...
 
-def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time], raw_rest_duration: Union[str, time], message: str = "", payload: Any = None):
+def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time], raw_rest_duration: Union[str, time], message: str = "", payload: Any = None) -> None:
     # register a series of events in cycle during start to end
     # the duration of one cycle = work_duration + rest_duration
     # For each cycle, register 2 event: cycle starting, cycle resting
+    ...
+
+def load_raw(source: str) -> None:
+    # load from a schema source code
     ...
 
 def load(file: str, encoding: str = "utf8") -> None:
     # load from a schema source code file
     ...
 
-def ext(name: Optional[str] = None):
+def ext(name: Optional[str] = None) -> None:
     # use an extension or use all installed extensions (if name is None)
     # provided by packages `schemdule-extensions-{extension name}`
     ...
@@ -151,6 +155,7 @@ from schemdule.prompters.configer import PrompterConfiger
 from schemdule.prompters import Prompter, PrompterHub
 at: Callable[[Union[str, time], str, Any], None]
 cycle: Callable[[Union[str, time], Union[str, time], Union[str, time], Union[str, time], str, Any], None]
+load_raw: Callable[[str], None]
 load: Callable[[str], None]
 ext: Callable[[Optional[str]], None]
 prompter: PrompterConfiger
@@ -161,4 +166,5 @@ env: Dict[str, Any]
 
 - [SimpleGUI](https://github.com/StardustDL/schemdule/tree/master/src/extensions/simplegui) [![](https://img.shields.io/pypi/v/schemdule-extensions-simplegui.svg?logo=pypi)](https://pypi.org/project/schemdule-extensions-simplegui/) [![Downloads](https://pepy.tech/badge/schemdule-extensions-simplegui)](https://pepy.tech/project/schemdule-extensions-simplegui)
 - [Miaotixing](https://github.com/StardustDL/schemdule/tree/master/src/extensions/miaotixing) [![](https://img.shields.io/pypi/v/schemdule-extensions-miaotixing.svg?logo=pypi)](https://pypi.org/project/schemdule-extensions-miaotixing/) [![Downloads](https://pepy.tech/badge/schemdule-extensions-miaotixing)](https://pepy.tech/project/schemdule-extensions-miaotixing)
+- [AudioPlay](https://github.com/StardustDL/schemdule/tree/master/src/extensions/audioplay) [![](https://img.shields.io/pypi/v/schemdule-extensions-audioplay.svg?logo=pypi)](https://pypi.org/project/schemdule-extensions-audioplay/) [![Downloads](https://pepy.tech/badge/schemdule-extensions-audioplay)](https://pepy.tech/project/schemdule-extensions-audioplay)
 - [All extensions on PyPI](https://pypi.org/search/?q=schemdule)
