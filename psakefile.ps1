@@ -34,6 +34,13 @@ Task Install {
     Write-Output "Install dependencies"
     if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Linux)) {
         Exec { sudo apt-get install -y python3-dev libasound2-dev }
+        Exec { sudo apt-get install -y ffmpeg }
+    }
+    elseif ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::OSX)) {
+        Exec { brew install ffmpeg }
+    }
+    elseif ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)) {
+        Exec { choco install ffmpeg }
     }
 
     Write-Output "Install main"

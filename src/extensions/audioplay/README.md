@@ -11,12 +11,21 @@ A audio player extension for
 
 ## Install
 
+Install dependencies:
+
+```sh
+# Install dependencies on Linux (only)
+sudo apt-get install -y python3-dev libasound2-dev
+
+# Install ffmpeg
+choco install ffmpeg        # Windows
+apt-get install -y ffmpeg   # Linux
+brew install ffmpeg         # MacOS
+```
+
 Use pip:
 
 ```sh
-# dependencies on Linux (only) for simpleaudio package
-sudo apt-get install -y python3-dev libasound2-dev
-
 pip install schemdule-extensions-audioplay
 ```
 
