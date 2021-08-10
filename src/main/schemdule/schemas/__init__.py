@@ -10,7 +10,7 @@ import logging
 
 from ..prompters import Prompter
 from ..prompters.builder import PrompterBuilder
-from ..extensions import load_extension, use_extension, find_extensions, load_extensions, use_extensions
+from ..extensions import loadExtension, useExtension, findExtensions, loadExtensions, useExtensions
 from ..timeutils import to_timedelta, subtract_time, parse_time
 from .timetable import TimeTable, TimeTableItem
 
@@ -27,7 +27,7 @@ class SchemaBuilder:
     def __init__(self) -> None:
         self.result: TimeTable = TimeTable()
 
-    def get_env(self) -> Dict[str, Any]:
+    def getEnv(self) -> Dict[str, Any]:
         prompterBuilder = default_prompter_builder()
 
         env = {}
@@ -51,7 +51,7 @@ class SchemaBuilder:
                 tstart, tend, twork_duration, trest_duration,
                 message, work_payload, rest_payload)
 
-        def load_raw(source: str) -> None:
+        def loadRaw(source: str) -> None:
             src_preview = source[:50].replace('\n', ' ').replace('\r', ' ')
             self._logger.info(f"Load: '{src_preview}...'")
             exec(source, env)
@@ -59,37 +59,37 @@ class SchemaBuilder:
         def load(file: str, encoding: str = "utf8") -> None:
             with open(file, encoding=encoding) as f:
                 source = f.read()
-            load_raw(source)
+            loadRaw(source)
 
         def ext(name: Optional[str] = None) -> None:
             if name is None:
                 self._logger.info("Use all installed extensions.")
-                extnames = find_extensions()
-                exts = load_extensions(extnames)
-                use_extensions(exts, env)
+                extnames = findExtensions()
+                exts = loadExtensions(extnames)
+                useExtensions(exts, env)
             else:
                 self._logger.info(f"Use extension {name}.")
-                extension = load_extension(name)
-                use_extension(extension, env)
+                extension = loadExtension(name)
+                useExtension(extension, env)
 
         env["at"] = at
         env["cycle"] = cycle
         env["load"] = load
-        env["load_raw"] = load_raw
+        env["loadRaw"] = loadRaw
         env["ext"] = ext
         env["prompter"] = prompterBuilder
         env["env"] = env
 
         return env
 
-    def use_env(self, env: Dict[str, Any]):
+    def useEnv(self, env: Dict[str, Any]):
         prompter = env.get("prompter")
         if isinstance(prompter, PrompterBuilder):
             self.result.use(prompter.build())
 
-    def load_with_env(self, src: str, env: Dict[str, Any]) -> None:
-        env["load_raw"](src)
-        self.use_env(env)
+    def loadWithEnv(self, src: str, env: Dict[str, Any]) -> None:
+        env["loadRaw"](src)
+        self.useEnv(env)
 
     def load(self, src) -> None:
-        self.load_with_env(src, self.get_env())
+        self.loadWithEnv(src, self.getEnv())

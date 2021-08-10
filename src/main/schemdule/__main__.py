@@ -77,15 +77,15 @@ def ext() -> None:
     """List all installed extensions."""
     logger = logging.getLogger("ext")
 
-    from .extensions import find_extensions, load_extension, get_extension_metadata
+    from .extensions import findExtensions, loadExtension, getExtensionMetadata
 
-    extnames = find_extensions()
+    extnames = findExtensions()
 
     click.echo(f"Found {len(extnames)} extension(s).")
 
     for name in extnames:
-        ext = load_extension(name)
-        metadata = get_extension_metadata(ext)
+        ext = loadExtension(name)
+        metadata = getExtensionMetadata(ext)
         click.echo(f"  {name} v{metadata['version']}")
 
 

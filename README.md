@@ -108,7 +108,7 @@ def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_durat
     # Payload will be wrapped in schemdule.prompters.CycleWorkPayload & CycleRestPayload
     ...
 
-def load_raw(source: str) -> None:
+def loadRaw(source: str) -> None:
     # load from a schema source code
     ...
 
@@ -156,7 +156,7 @@ from schemdule.prompters.builder import PrompterBuilder
 from schemdule.prompters import Prompter, PrompterHub
 at: Callable[[Union[str, time], str, Any], None]
 cycle: Callable[[Union[str, time], Union[str, time], Union[str, time, timedelta], Union[str, time, timedelta], str, Any, Any], None]
-load_raw: Callable[[str], None]
+loadRaw: Callable[[str], None]
 load: Callable[[str], None]
 ext: Callable[[Optional[str]], None]
 prompter: PrompterBuilder

@@ -1,8 +1,11 @@
 from typing import Any, Callable, Iterator
 import logging
+from enum import Enum
 from datetime import time, timedelta
+import random
 from pydub import AudioSegment, playback
 import simpleaudio
+import glob
 from schemdule.prompters import Prompter, PromptResult
 
 __version__ = "0.0.8"
@@ -33,3 +36,27 @@ class AudioPlayerPrompter(Prompter):
             play_obj.wait_done()
 
         return self.success()
+
+class AudioSelectorStrategy(Enum):
+    Random = 0
+
+
+class AudioSelectorBuilder:
+    def __init__(self) -> None:
+        self.files: list[str] = []
+        self.strategy: AudioSelectorStrategy = AudioSelectorStrategy.Random
+    
+    def fromGlob(self, rule: str) -> "AudioSelectorBuilder":
+        self.files = glob.glob(rule)
+        return self
+    
+    def useRandom(self) -> "AudioSelectorBuilder":
+        self.strategy = AudioSelectorStrategy.Random
+        return self
+    
+    def build(self) -> Callable[[Any], Iterator[str]]:
+        def randomSelector(payload: Any) -> Iterator[str]:
+            result = [x for x in self.files]
+            random.shuffle(result)
+            return result
+        return randomSelector
