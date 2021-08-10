@@ -22,12 +22,13 @@ class AudioPlayerPrompter(Prompter):
             self._logger.debug(f"Load file {file}...")
             sound = AudioSegment.from_file(file)
 
-            self._logger.info(f"Play audio {file} ({timedelta(seconds=sound.duration_seconds)})...")
+            self._logger.info(
+                f"Play audio {file} ({timedelta(seconds=sound.duration_seconds)})...")
             play_obj = simpleaudio.play_buffer(
                 sound.raw_data,
-                num_channels= sound.channels,
-                bytes_per_sample= sound.sample_width,
-                sample_rate= sound.frame_rate
+                num_channels=sound.channels,
+                bytes_per_sample=sound.sample_width,
+                sample_rate=sound.frame_rate
             )
             play_obj.wait_done()
 

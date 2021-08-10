@@ -37,11 +37,11 @@ schemdule ext
 
 ## Usage
 
-This extension provide a `AudioPlayerPrompter` and add the following extension methods on `PrompterConfiger`.
+This extension provide a `AudioPlayerPrompter` and add the following extension methods on `PrompterBuilder`.
 
 ```python
-class PrompterConfiger:
-    def useAudioPlayer(self, files: Callable[[Any], Iterator[str]], final: bool = False)) -> "PrompterConfiger":
+class PrompterBuilder:
+    def useAudioPlayer(self, files: Callable[[Any], Iterator[str]], final: bool = False)) -> "PrompterBuilder":
         ...
 ```
 

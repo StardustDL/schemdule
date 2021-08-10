@@ -2,17 +2,9 @@ from datetime import date, time, datetime, timedelta
 from typing import Optional, Union, Any
 
 import functools
-from queue import deque
-import enlighten
-import click
-import json
 import logging
 
-from time import sleep
-
-from ..prompters import Prompter
-from ..prompters.configer import PrompterConfiger
-from ..extensions import load_extension, use_extension
+from ..prompters import Prompter, CycleWorkPayload, CycleRestPayload
 from ..timeutils import to_timedelta, subtract_time, parse_time
 
 
@@ -52,13 +44,11 @@ class TimeTable:
         self._logger.debug(f"{message} ({payload}) at {time}.")
         self.items.append(TimeTableItem(time, message, payload))
 
-    def cycle(self, start: time, end: time, work_duration: time, rest_duration: time, message: str = "", payload: Any = None) -> None:
+    def cycle(self, start: time, end: time, work_duration: timedelta, rest_duration: timedelta, message: str = "", work_payload: Any = None, rest_payload: Any = None) -> None:
         self._logger.debug(
-            f"{message} ({payload}) cycle from {start} to {end} (work {work_duration}, rest {rest_duration}).")
+            f"{message} ({work_payload}, {rest_payload}) cycle from {start} to {end} (work {work_duration}, rest {rest_duration}).")
         _start = datetime(2000, 1, 1) + to_timedelta(start)
         _end = datetime(2000, 1, 1) + to_timedelta(end)
-        _work_duration = to_timedelta(work_duration)
-        _rest_duration = to_timedelta(rest_duration)
 
         index = 0
 
@@ -67,11 +57,11 @@ class TimeTable:
         while current < _end:
             index += 1
             self.at(min(current, _end).time(),
-                    f"{message} (cycle {index} starting)", payload)
-            current += _work_duration
+                    f"{message} (cycle {index} starting)", CycleWorkPayload(index, work_duration, work_payload))
+            current += work_duration
             self.at(min(current, _end).time(),
-                    f"{message} (cycle {index} resting starting)", payload)
-            current += _rest_duration
+                    f"{message} (cycle {index} resting starting)", CycleRestPayload(index, rest_duration, rest_payload))
+            current += rest_duration
 
     def clear(self) -> None:
         self.items.clear()

@@ -36,11 +36,11 @@ schemdule ext
 
 ## Usage
 
-This extension provide a `MiaotixingPrompter` and add the following extension methods on `PrompterConfiger`.
+This extension provide a `MiaotixingPrompter` and add the following extension methods on `PrompterBuilder`.
 
 ```python
-class PrompterConfiger:
-    def useMiaotixing(self, code: str, final: bool = False) -> "PrompterConfiger":
+class PrompterBuilder:
+    def useMiaotixing(self, code: str, final: bool = False) -> "PrompterBuilder":
         ...
 ```
 

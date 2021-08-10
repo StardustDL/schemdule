@@ -1,5 +1,5 @@
 from datetime import date, time, datetime, timedelta
-from typing import Dict, Optional, Union, Any
+from typing import Dict, Optional, Union, Any, cast
 
 import functools
 from queue import deque
@@ -9,14 +9,14 @@ import json
 import logging
 
 from ..prompters import Prompter
-from ..prompters.configer import PrompterConfiger
+from ..prompters.builder import PrompterBuilder
 from ..extensions import load_extension, use_extension, find_extensions, load_extensions, use_extensions
 from ..timeutils import to_timedelta, subtract_time, parse_time
 from .timetable import TimeTable, TimeTableItem
 
 
-def default_prompter_configer() -> PrompterConfiger:
-    prompter = PrompterConfiger()
+def default_prompter_builder() -> PrompterBuilder:
+    prompter = PrompterBuilder()
     prompter.useSwitcher().useConsole().useCallable(True).useTkinterMessageBox()
     return prompter
 
@@ -28,7 +28,7 @@ class SchemaBuilder:
         self.result: TimeTable = TimeTable()
 
     def get_env(self) -> Dict[str, Any]:
-        prompterConfiger = default_prompter_configer()
+        prompterBuilder = default_prompter_builder()
 
         env = {}
 
@@ -37,18 +37,20 @@ class SchemaBuilder:
                 raw_time, str) else raw_time
             self.result.at(ttime, message, payload)
 
-        def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time], raw_rest_duration: Union[str, time], message: str = "", payload: Any = None) -> None:
+        def cycle(raw_start: Union[str, time], raw_end: Union[str, time, timedelta], raw_work_duration: Union[str, time, timedelta], raw_rest_duration: Union[str, time], message: str = "", work_payload: Any = None, rest_payload: Any = None) -> None:
             tstart = parse_time(raw_start) if isinstance(
                 raw_start, str) else raw_start
             tend = parse_time(raw_end) if isinstance(raw_end, str) else raw_end
-            twork_duration = parse_time(raw_work_duration) if isinstance(
-                raw_work_duration, str) else raw_work_duration
-            trest_duration = parse_time(raw_rest_duration) if isinstance(
-                raw_rest_duration, str) else raw_rest_duration
+            twork_duration = to_timedelta(parse_time(raw_work_duration)) if isinstance(
+                raw_work_duration, str) else to_timedelta(raw_work_duration) if isinstance(
+                raw_work_duration, time) else raw_work_duration
+            trest_duration = to_timedelta(parse_time(raw_rest_duration)) if isinstance(
+                raw_rest_duration, str) else to_timedelta(raw_rest_duration) if isinstance(
+                raw_rest_duration, time) else raw_rest_duration
             self.result.cycle(
                 tstart, tend, twork_duration, trest_duration,
-                message, payload)
-        
+                message, work_payload, rest_payload)
+
         def load_raw(source: str) -> None:
             src_preview = source[:50].replace('\n', ' ').replace('\r', ' ')
             self._logger.info(f"Load: '{src_preview}...'")
@@ -75,14 +77,14 @@ class SchemaBuilder:
         env["load"] = load
         env["load_raw"] = load_raw
         env["ext"] = ext
-        env["prompter"] = prompterConfiger
+        env["prompter"] = prompterBuilder
         env["env"] = env
 
         return env
 
     def use_env(self, env: Dict[str, Any]):
         prompter = env.get("prompter")
-        if isinstance(prompter, PrompterConfiger):
+        if isinstance(prompter, PrompterBuilder):
             self.result.use(prompter.build())
 
     def load_with_env(self, src: str, env: Dict[str, Any]) -> None:

@@ -11,7 +11,7 @@ import logging
 from time import sleep
 from ..prompters import Prompter
 from ..schemas.timetable import TimeTable, TimeTableItem
-from ..schemas import default_prompter_configer
+from ..schemas import default_prompter_builder
 from ..timeutils import subtract_time
 
 
@@ -65,7 +65,7 @@ class Scheduler:
         prompter = timetable.prompter if prompter is None else prompter
 
         if prompter is None:
-            prompter = default_prompter_configer().build()
+            prompter = default_prompter_builder().build()
 
         self._logger.info(f"Used prompter: {prompter}.")
 

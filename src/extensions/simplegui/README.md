@@ -34,11 +34,11 @@ schemdule ext
 
 ## Usage
 
-This extension provide a `MessageBoxPrompter` and add the following extension methods on `PrompterConfiger`.
+This extension provide a `MessageBoxPrompter` and add the following extension methods on `PrompterBuilder`.
 
 ```python
-class PrompterConfiger:
-    def useMessageBox(self, auto_close: bool = False, final: bool = False) -> "PrompterConfiger":
+class PrompterBuilder:
+    def useMessageBox(self, auto_close: bool = False, final: bool = False) -> "PrompterBuilder":
         ...
 ```
 

@@ -90,7 +90,7 @@ schemdule demo
 
 Schema is a pure python script, so you can use any python statement in it.
 
-Schemdule provide `at`, `cycle`, `load` and `ext` functions for registering events, and a `PrompterConfiger` variable named `prompter` to config prompter.
+Schemdule provide `at`, `cycle`, `load` and `ext` functions for registering events, and a `PrompterBuilder` variable named `prompter` to config prompter.
 
 > These functions and variable can be accessed and modified in the variable `env`, a dict for these items provided by Schemdule. You can change the `env` variable to change the execute environment for `load` function.
 
@@ -101,10 +101,11 @@ def at(raw_time: Union[str, time], message: str = "", payload: Any = None) -> No
     # register an event at time with message
     ...
 
-def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time], raw_rest_duration: Union[str, time], message: str = "", payload: Any = None) -> None:
+def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time, timedelta], raw_rest_duration: Union[str, time, timedelta], message: str = "", work_payload: Any = None, rest_payload: Any = None) -> None:
     # register a series of events in cycle during start to end
     # the duration of one cycle = work_duration + rest_duration
     # For each cycle, register 2 event: cycle starting, cycle resting
+    # Payload will be wrapped in schemdule.prompters.CycleWorkPayload & CycleRestPayload
     ...
 
 def load_raw(source: str) -> None:
@@ -122,25 +123,25 @@ def ext(name: Optional[str] = None) -> None:
 
 # the class of the variable `prompter`
 
-class PrompterConfiger:
-    def use(self, prompter: Prompter) -> "PrompterConfiger": ...
+class PrompterBuilder:
+    def use(self, prompter: Prompter) -> "PrompterBuilder": ...
 
-    def useBroadcaster(self, final: bool = False) -> "PrompterConfiger": ...
+    def useBroadcaster(self, final: bool = False) -> "PrompterBuilder": ...
 
-    def useSwitcher(self, final: bool = False) -> "PrompterConfiger": ...
+    def useSwitcher(self, final: bool = False) -> "PrompterBuilder": ...
 
-    def useConsole(self, final: bool = False) -> "PrompterConfiger": ...
+    def useConsole(self, final: bool = False) -> "PrompterBuilder": ...
 
-    def useCallable(self, final: bool = False) -> "PrompterConfiger": ...
+    def useCallable(self, final: bool = False) -> "PrompterBuilder": ...
 
-    def useTkinterMessageBox(self, final: bool = False) -> "PrompterConfiger": ...
+    def useTkinterMessageBox(self, final: bool = False) -> "PrompterBuilder": ...
 
-    def clear(self) -> "PrompterConfiger": ...
+    def clear(self) -> "PrompterBuilder": ...
 
 # the default value of the variable `prompter`
 
-def default_prompter_configer() -> PrompterConfiger:
-    prompter = PrompterConfiger()
+def default_prompter_builder() -> PrompterBuilder:
+    prompter = PrompterBuilder()
     prompter.useSwitcher().useConsole().useCallable(True).useTkinterMessageBox()
     return prompter
 ```
@@ -150,15 +151,15 @@ Here are the type annotions for schema.
 ```python
 # Type annotions
 from typing import Callable, Union, Any, Dict, Optional
-from datetime import time
-from schemdule.prompters.configer import PrompterConfiger
+from datetime import time, timedelta
+from schemdule.prompters.builder import PrompterBuilder
 from schemdule.prompters import Prompter, PrompterHub
 at: Callable[[Union[str, time], str, Any], None]
-cycle: Callable[[Union[str, time], Union[str, time], Union[str, time], Union[str, time], str, Any], None]
+cycle: Callable[[Union[str, time], Union[str, time], Union[str, time, timedelta], Union[str, time, timedelta], str, Any, Any], None]
 load_raw: Callable[[str], None]
 load: Callable[[str], None]
 ext: Callable[[Optional[str]], None]
-prompter: PrompterConfiger
+prompter: PrompterBuilder
 env: Dict[str, Any]
 ```
 
