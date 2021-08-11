@@ -2,7 +2,6 @@ import functools
 import json
 import logging
 from datetime import date, datetime, time, timedelta
-from queue import deque
 from typing import Any, Dict, Optional, Union, cast
 
 import click
@@ -39,7 +38,7 @@ class SchemaBuilder:
                 raw_time, str) else raw_time
             self.result.at(ttime, message, payload)
 
-        def cycle(raw_start: Union[str, time], raw_end: Union[str, time, timedelta], raw_work_duration: Union[str, time, timedelta], raw_rest_duration: Union[str, time], message: str = "", work_payload: Any = None, rest_payload: Any = None) -> None:
+        def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time, timedelta], raw_rest_duration: Union[str, time, timedelta], message: str = "", work_payload: Any = None, rest_payload: Any = None) -> None:
             tstart = parse_time(raw_start) if isinstance(
                 raw_start, str) else raw_start
             tend = parse_time(raw_end) if isinstance(raw_end, str) else raw_end

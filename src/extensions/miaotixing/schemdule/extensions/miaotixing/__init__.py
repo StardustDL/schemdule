@@ -4,8 +4,9 @@ import time
 from typing import Any
 from urllib import parse, request
 
+from schemdule.helpers import buildMessage
 from schemdule.prompters import (Prompter, PrompterPayloadCollection,
-                                 PromptResult, getMessage)
+                                 PromptResult)
 
 __version__ = "0.0.8"
 
@@ -18,7 +19,7 @@ class MiaotixingPrompter(Prompter):
         self.code = code
 
     def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
-        with request.urlopen("http://miaotixing.com/trigger?" + parse.urlencode({"id": self.code, "text": getMessage(payloads), "type": "json"})) as req:
+        with request.urlopen("http://miaotixing.com/trigger?" + parse.urlencode({"id": self.code, "text": buildMessage(payloads), "type": "json"})) as req:
             result = json.loads(req.read())
         if result["code"] == 0:
             return self.success()

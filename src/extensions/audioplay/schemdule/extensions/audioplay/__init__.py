@@ -29,7 +29,7 @@ class AudioPlayerPrompter(Prompter):
     def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
         schedule = payloads.getSchedule()
 
-        audios: Iterable[AudioPayload] = payloads.tryGet(AudioPayload)
+        audios: List[AudioPayload] = list(payloads.tryGet(AudioPayload))
 
         if len(audios) == 0:
             return PromptResult.Unsupported

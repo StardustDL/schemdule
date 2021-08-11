@@ -7,8 +7,15 @@ import click
 import enlighten
 
 from . import __version__
+from .helpers import buildMessage
 from .schedulers import Scheduler
 from .schemas import SchemaBuilder
+from .schemas.timetable import TimeTable
+
+
+def previewTimeTable(timetable: TimeTable, scheduler: Scheduler):
+    for item in scheduler.scheduledTimeTable(timetable):
+        click.echo(buildMessage(item))
 
 
 @click.command()
@@ -23,6 +30,7 @@ Please give a schema file:
     demo_schema = """
 from datetime import datetime, timedelta
 now = datetime.now()
+now = now - timedelta(microseconds=now.microsecond)
 
 def callable_payload():
     print("From Callable")
@@ -43,12 +51,17 @@ prompter.clear().useSwitcher().useConsole().useCallable()
     click.echo("\n".join(map(lambda x: "    " + x,
                              demo_schema.strip().splitlines())))
 
-    click.echo("\nScheduling...")
-
     tt = SchemaBuilder()
-    sc = Scheduler()
 
     tt.load(demo_schema)
+
+    click.echo("Built timetable:\n")
+
+    sc = Scheduler()
+
+    previewTimeTable(tt.result, sc)
+
+    click.echo("\nScheduling...\n")
 
     sc.schedule(tt.result)
 
@@ -60,18 +73,16 @@ def run(schema: str, preview: bool = False) -> None:
     """Schedule a schema."""
     logger = logging.getLogger("run")
 
-    click.echo(f"Welcome to Schemdule v{__version__}!")
-
     tt = SchemaBuilder()
 
     with open(schema, encoding="utf8") as f:
         tt.load(f.read())
 
+    sc = Scheduler()
+
     if preview:
-        for item in sorted(tt.result.items):
-            click.echo(f"{item.message} @ {item.time}")
+        previewTimeTable(tt.result, sc)
     else:
-        sc = Scheduler()
         sc.schedule(tt.result)
 
 
@@ -96,11 +107,13 @@ def ext() -> None:
 @click.pass_context
 @click.option('-v', '--verbose', count=True, default=0, type=click.IntRange(0, 4))
 @click.option("--version", is_flag=True, default=False, help="Show the version.")
-def main(ctx, verbose: int = 0, version: bool = False) -> None:
+def main(ctx=None, verbose: int = 0, version: bool = False) -> None:
     """Schemdule (https://github.com/StardustDL/schemdule)
 
 A tiny tool using script as schema to schedule one day and remind you to do something during a day.
 """
+    click.echo(f"Welcome to Schemdule v{__version__}!")
+
     logger = logging.getLogger("Cli-Main")
 
     loggingLevel = {

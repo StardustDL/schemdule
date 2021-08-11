@@ -3,7 +3,7 @@ from typing import Any
 
 import click
 
-from . import Prompter, PrompterPayloadCollection, PromptResult, getMessage
+from . import Prompter, PrompterPayloadCollection, PromptResult
 
 
 class TkinterMessageBoxPrompter(Prompter):
@@ -13,12 +13,13 @@ class TkinterMessageBoxPrompter(Prompter):
     def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
         import tkinter
         import tkinter.messagebox
+        from ..helpers import buildMessage
 
         top = tkinter.Tk()
         top.withdraw()
 
         tkinter.messagebox.showinfo(
-            f"Attention {getMessage(payloads)}", payloads)
+            f"Attention {buildMessage(payloads)}", str(payloads))
         top.destroy()
 
         return self.success()
@@ -29,7 +30,9 @@ class ConsolePrompter(Prompter):
         super().__init__(final)
 
     def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
-        click.echo(f"Attention {getMessage(payloads)}: {payloads}")
+        from ..helpers import buildMessage
+        
+        click.echo(f"Attention {buildMessage(payloads)}: {payloads}")
 
         return self.success()
 
@@ -41,7 +44,7 @@ class CallablePrompter(Prompter):
     def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
         hasCallable = False
         for payload in payloads.getUsers():
-            if callable(payload):
-                payload()
+            if callable(payload.payload):
+                payload.payload()
                 hasCallable = True
         return self.success() if hasCallable else PromptResult.Unsupported
