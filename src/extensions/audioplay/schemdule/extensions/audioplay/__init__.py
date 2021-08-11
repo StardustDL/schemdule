@@ -6,7 +6,7 @@ import random
 from pydub import AudioSegment, playback
 import simpleaudio
 import glob
-from schemdule.prompters import Prompter, PromptResult
+from schemdule.prompters import Prompter, PromptResult, PrompterPayloadCollection
 
 __version__ = "0.0.8"
 
@@ -14,12 +14,12 @@ __version__ = "0.0.8"
 class AudioPlayerPrompter(Prompter):
     _logger = logging.getLogger("AudioPlayerPrompter")
 
-    def __init__(self, files: Callable[[Any], Iterator[str]], final: bool = False) -> None:
+    def __init__(self, files: Callable[[PrompterPayloadCollection], Iterator[str]], final: bool = False) -> None:
         super().__init__(final)
         self.files = files
 
-    def prompt(self, message: str, payload: Any) -> Any:
-        files = self.files(payload)
+    def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
+        files = self.files(payloads)
 
         for file in files:
             self._logger.debug(f"Load file {file}...")
@@ -37,6 +37,7 @@ class AudioPlayerPrompter(Prompter):
 
         return self.success()
 
+
 class AudioSelectorStrategy(Enum):
     Random = 0
 
@@ -45,15 +46,15 @@ class AudioSelectorBuilder:
     def __init__(self) -> None:
         self.files: list[str] = []
         self.strategy: AudioSelectorStrategy = AudioSelectorStrategy.Random
-    
+
     def fromGlob(self, rule: str) -> "AudioSelectorBuilder":
         self.files = glob.glob(rule)
         return self
-    
+
     def useRandom(self) -> "AudioSelectorBuilder":
         self.strategy = AudioSelectorStrategy.Random
         return self
-    
+
     def build(self) -> Callable[[Any], Iterator[str]]:
         def randomSelector(payload: Any) -> Iterator[str]:
             result = [x for x in self.files]

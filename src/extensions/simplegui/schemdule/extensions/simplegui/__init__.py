@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 from typing import Any
-from schemdule.prompters import Prompter, PromptResult
+from schemdule.prompters import Prompter, PromptResult, PrompterPayloadCollection
 
 __version__ = "0.0.8"
 
@@ -10,8 +10,10 @@ class MessageBoxPrompter(Prompter):
         super().__init__(final)
         self.auto_close = auto_close
 
-    def prompt(self, message: str, payload: Any) -> Any:
-        sg.popup_scrolled(str(payload), title=f"Attention {message}", auto_close=self.auto_close,
+    def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
+        schedule = payloads.getSchedule()
+
+        sg.popup_scrolled(str(payloads), title=f"Attention {schedule.message}", auto_close=self.auto_close,
                           keep_on_top=True, background_color='white', text_color='black')
 
         return self.success()

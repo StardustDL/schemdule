@@ -1,5 +1,5 @@
 from typing import Any
-from schemdule.prompters import Prompter, PromptResult
+from schemdule.prompters import Prompter, PromptResult, PrompterPayloadCollection
 from urllib import request, parse
 import time
 import json
@@ -15,8 +15,9 @@ class MiaotixingPrompter(Prompter):
         super().__init__(final)
         self.code = code
 
-    def prompt(self, message: str, payload: Any) -> Any:
-        with request.urlopen("http://miaotixing.com/trigger?" + parse.urlencode({"id": self.code, "text": message, "type": "json"})) as req:
+    def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
+        schedule = payloads.getSchedule()
+        with request.urlopen("http://miaotixing.com/trigger?" + parse.urlencode({"id": self.code, "text": schedule.message, "type": "json"})) as req:
             result = json.loads(req.read())
         if result["code"] == 0:
             return self.success()

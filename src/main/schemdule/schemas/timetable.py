@@ -4,16 +4,18 @@ from typing import Optional, Union, Any
 import functools
 import logging
 
-from ..prompters import Prompter, CycleWorkPayload, CycleRestPayload
+from ..prompters import Prompter
 from ..timeutils import to_timedelta, subtract_time, parse_time
 
 
 @functools.total_ordering
 class TimeTableItem:
-    def __init__(self, time: time, message: str = "", payload: Any = None) -> None:
+    def __init__(self, time: time, message: str = "", payload: Any = None, cycleIndex: Optional[int] = None, cycleWork: bool = False) -> None:
         self.time = time
         self.message = message
         self.payload = payload
+        self.cycleIndex = cycleIndex
+        self.cycleWork = cycleWork
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, TimeTableItem):
@@ -40,9 +42,9 @@ class TimeTable:
         self._logger.debug(f"Use prompter {prompter}.")
         self.prompter = prompter
 
-    def at(self, time: time, message: str = "", payload: Any = None) -> None:
+    def at(self, time: time, message: str = "", payload: Any = None, cycleIndex: Optional[int] = None, cycleWork: bool = False) -> None:
         self._logger.debug(f"{message} ({payload}) at {time}.")
-        self.items.append(TimeTableItem(time, message, payload))
+        self.items.append(TimeTableItem(time, message, payload, cycleIndex, cycleWork))
 
     def cycle(self, start: time, end: time, work_duration: timedelta, rest_duration: timedelta, message: str = "", work_payload: Any = None, rest_payload: Any = None) -> None:
         self._logger.debug(
@@ -57,10 +59,10 @@ class TimeTable:
         while current < _end:
             index += 1
             self.at(min(current, _end).time(),
-                    f"{message} (cycle {index} starting)", CycleWorkPayload(index, work_duration, work_payload))
+                    message, work_payload, index, True)
             current += work_duration
             self.at(min(current, _end).time(),
-                    f"{message} (cycle {index} resting starting)", CycleRestPayload(index, rest_duration, rest_payload))
+                    message, rest_payload, index, False)
             current += rest_duration
 
     def clear(self) -> None:

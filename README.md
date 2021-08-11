@@ -105,7 +105,6 @@ def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_durat
     # register a series of events in cycle during start to end
     # the duration of one cycle = work_duration + rest_duration
     # For each cycle, register 2 event: cycle starting, cycle resting
-    # Payload will be wrapped in schemdule.prompters.CycleWorkPayload & CycleRestPayload
     ...
 
 def loadRaw(source: str) -> None:

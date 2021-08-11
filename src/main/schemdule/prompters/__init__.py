@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from datetime import timedelta
-from typing import Any, Iterable, List, Optional
+from typing import Any, Iterable, Iterator, List, Optional
 from enum import Enum
+from dataclasses import dataclass
 
 
 class PromptResult(Enum):
@@ -12,6 +13,59 @@ class PromptResult(Enum):
     Failed = 4          # Failed, stop going next
 
 
+class PrompterPayload(ABC):
+    pass
+
+
+@dataclass
+class CyclePayload(PrompterPayload):
+    work: bool
+    index: int
+
+
+@dataclass
+class UserPayload(PrompterPayload):
+    payload: Any
+
+
+@dataclass
+class SchedulePayload(PrompterPayload):
+    index: int
+    message: str
+    duration: timedelta
+
+
+class PrompterPayloadCollection(PrompterPayload):
+    def __init__(self, payloads: Optional[List[PrompterPayload]]) -> None:
+        super().__init__()
+        self.payloads = payloads if payloads is not None else []
+
+    def withPayload(self, payload: PrompterPayload) -> "PrompterPayloadCollection":
+        self.payloads.append(payload)
+        return self
+
+    def withPayloads(self, payloads: "PrompterPayloadCollection") -> "PrompterPayloadCollection":
+        self.payloads.extend(payloads)
+        return self
+
+    def tryGet(self, type: type) -> Iterable[PrompterPayload]:
+        for item in self.payloads:
+            if isinstance(item, type):
+                yield item
+
+    def getSchedule(self) -> Optional[SchedulePayload]:
+        return next(self.tryGet(SchedulePayload), None)
+
+    def getCycle(self) -> Optional[CyclePayload]:
+        return next(self.tryGet(CyclePayload), None)
+
+    def getUser(self) -> Iterable[UserPayload]:
+        return self.tryGet(UserPayload)
+
+    def __iter__(self) -> Iterator[PrompterPayload]:
+        return iter(self.payloads)
+
+
 class Prompter(ABC):
     def __init__(self, final: bool = False) -> None:
         self.final = final
@@ -20,7 +74,7 @@ class Prompter(ABC):
         return PromptResult.Finished if self.final else PromptResult.Resolved
 
     @abstractmethod
-    def prompt(self, message: str, payload: Any) -> Any:
+    def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
         pass
 
     def __repr__(self) -> str:
@@ -31,40 +85,3 @@ class PrompterHub(Prompter, ABC):
     @abstractmethod
     def register(self, prompter: Prompter) -> None:
         pass
-
-
-class PrompterPayload(ABC):
-    pass
-
-
-class PrompterPayloadCollection(PrompterPayload):
-    def __init__(self, payloads: Optional[List[Any]]) -> None:
-        super().__init__()
-        self.payloads = payloads if payloads is not None else []
-
-    def try_get(self, type: type) -> Iterable[Any]:
-        for item in self.payloads:
-            if isinstance(item, type):
-                yield item
-
-
-class CycleWorkPayload(PrompterPayload):
-    def __init__(self, index: int, duration: timedelta, payload: Any) -> None:
-        super().__init__()
-        self.index = index
-        self.duration = duration
-        self.payload = payload
-
-    def __repr__(self) -> str:
-        return f"CycleWorkPayload({self.index}, {self.duration}, {self.payload})"
-
-
-class CycleRestPayload(PrompterPayload):
-    def __init__(self, index: int, duration: timedelta, payload: Any) -> None:
-        super().__init__()
-        self.index = index
-        self.duration = duration
-        self.payload = payload
-
-    def __repr__(self) -> str:
-        return f"CycleRestPayload({self.index}, {self.duration}, {self.payload})"
