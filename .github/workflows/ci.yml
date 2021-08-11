@@ -17,7 +17,7 @@ jobs:
         persist-credentials: false
     - uses: actions/setup-python@v2
       with:
-        python-version: '3.6'
+        python-version: '3.7'
         architecture: 'x64'
     - name: Setup psake
       run: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted; Install-Module -Name psake

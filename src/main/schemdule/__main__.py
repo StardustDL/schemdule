@@ -15,13 +15,13 @@ from .schemas.timetable import TimeTable
 
 def previewTimeTable(timetable: TimeTable, scheduler: Scheduler):
     for item in scheduler.scheduledTimeTable(timetable):
-        click.echo(buildMessage(item))
+        print(buildMessage(item))
 
 
 @click.command()
 def demo():
     """Try a schema scheduling demo."""
-    click.echo("""
+    print("""
 Please give a schema file:
 
     $ python -m schemdule --schema schema.py
@@ -47,21 +47,21 @@ cycle((now + timedelta(seconds=5)).time(),
 prompter.clear().useSwitcher().useConsole().useCallable()
 """
 
-    click.echo("A demo schema:\n")
-    click.echo("\n".join(map(lambda x: "    " + x,
-                             demo_schema.strip().splitlines())))
+    print("A demo schema:\n")
+    print("\n".join(map(lambda x: "    " + x,
+                        demo_schema.strip().splitlines())))
 
     tt = SchemaBuilder()
 
     tt.load(demo_schema)
 
-    click.echo("Built timetable:\n")
+    print("Built timetable:\n")
 
     sc = Scheduler()
 
     previewTimeTable(tt.result, sc)
 
-    click.echo("\nScheduling...\n")
+    print("\nScheduling...\n")
 
     sc.schedule(tt.result)
 
@@ -95,12 +95,12 @@ def ext() -> None:
 
     extnames = findExtensions()
 
-    click.echo(f"Found {len(extnames)} extension(s).")
+    print(f"Found {len(extnames)} extension(s).")
 
     for name in extnames:
         ext = loadExtension(name)
         metadata = getExtensionMetadata(ext)
-        click.echo(f"  {name} v{metadata['version']}")
+        print(f"  {name} v{metadata['version']}")
 
 
 @click.group(invoke_without_command=True)
@@ -112,7 +112,7 @@ def main(ctx=None, verbose: int = 0, version: bool = False) -> None:
 
 A tiny tool using script as schema to schedule one day and remind you to do something during a day.
 """
-    click.echo(f"Welcome to Schemdule v{__version__}!")
+    print(f"Welcome to Schemdule v{__version__}!")
 
     logger = logging.getLogger("Cli-Main")
 
@@ -129,7 +129,7 @@ A tiny tool using script as schema to schedule one day and remind you to do some
     logger.debug(f"Logging level: {loggingLevel}")
 
     if version:
-        click.echo(f"Schemdule v{__version__}")
+        print(f"Schemdule v{__version__}")
         exit(0)
 
 
