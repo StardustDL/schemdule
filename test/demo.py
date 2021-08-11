@@ -7,6 +7,7 @@ now = now - timedelta(microseconds=now.microsecond)
 def callable_payload():
     print("From Callable")
 
+
 def callable_payload2():
     print("From Callable for resting")
 
