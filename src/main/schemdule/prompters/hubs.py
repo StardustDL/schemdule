@@ -18,7 +18,8 @@ class PrompterSwitcher(PrompterHub):
         results = []
         schedule = payloads.getSchedule()
         for prompter in self.prompters:
-            self._logger.info(f"Send '{schedule.message}' to prompter: {prompter}.")
+            self._logger.info(
+                f"Send '{schedule.message}' to prompter: {prompter}.")
 
             result = prompter.prompt(payloads)
 
@@ -27,7 +28,8 @@ class PrompterSwitcher(PrompterHub):
             results.append(result)
 
             if result is PromptResult.Finished:
-                self._logger.info(f"Finish prompting for '{schedule.message}'.")
+                self._logger.info(
+                    f"Finish prompting for '{schedule.message}'.")
                 break
             elif result is PromptResult.Failed:
                 self._logger.error(
@@ -40,7 +42,8 @@ class PrompterSwitcher(PrompterHub):
             self._logger.info(f"Empty prompting for '{schedule.message}'.")
             return PromptResult.Empty
         elif len([x for x in results if x is PromptResult.Unsupported]) == lr:
-            self._logger.info(f"Unsupported prompting for '{schedule.message}'.")
+            self._logger.info(
+                f"Unsupported prompting for '{schedule.message}'.")
             return PromptResult.Unsupported
         else:
             self._logger.info(f"Success prompting for '{schedule.message}'.")
@@ -61,7 +64,8 @@ class PrompterBroadcaster(PrompterHub):
     def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
         schedule = payloads.getSchedule()
         for prompter in self.prompters:
-            self._logger.info(f"Send '{schedule.message}' to prompter: {prompter}.")
+            self._logger.info(
+                f"Send '{schedule.message}' to prompter: {prompter}.")
 
             result = prompter.prompt(payloads)
 

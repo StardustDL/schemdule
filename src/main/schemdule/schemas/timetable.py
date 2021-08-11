@@ -44,7 +44,8 @@ class TimeTable:
 
     def at(self, time: time, message: str = "", payload: Any = None, cycleIndex: Optional[int] = None, cycleWork: bool = False) -> None:
         self._logger.debug(f"{message} ({payload}) at {time}.")
-        self.items.append(TimeTableItem(time, message, payload, cycleIndex, cycleWork))
+        self.items.append(TimeTableItem(
+            time, message, payload, cycleIndex, cycleWork))
 
     def cycle(self, start: time, end: time, work_duration: timedelta, rest_duration: timedelta, message: str = "", work_payload: Any = None, rest_payload: Any = None) -> None:
         self._logger.debug(

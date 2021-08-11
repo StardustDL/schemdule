@@ -1,63 +1,58 @@
-from typing import Any, Callable, Iterator
+from dataclasses import dataclass, field
+from time import sleep
+from typing import Any, Callable, Iterable, Iterator
 import logging
 from enum import Enum
-from datetime import time, timedelta
+from datetime import datetime, time, timedelta
 import random
 from pydub import AudioSegment, playback
 import simpleaudio
 import glob
-from schemdule.prompters import Prompter, PromptResult, PrompterPayloadCollection
+from schemdule.prompters import Prompter, PromptResult, PrompterPayload, PrompterPayloadCollection
 
 __version__ = "0.0.8"
+
+
+@dataclass
+class AudioPayload(PrompterPayload):
+    files: list[str] = field(default_factory=list)
 
 
 class AudioPlayerPrompter(Prompter):
     _logger = logging.getLogger("AudioPlayerPrompter")
 
-    def __init__(self, files: Callable[[PrompterPayloadCollection], Iterator[str]], final: bool = False) -> None:
+    def __init__(self, final: bool = False) -> None:
         super().__init__(final)
-        self.files = files
 
     def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
-        files = self.files(payloads)
+        schedule = payloads.getSchedule()
 
-        for file in files:
-            self._logger.debug(f"Load file {file}...")
-            sound = AudioSegment.from_file(file)
+        audios: Iterable[AudioPayload] = payloads.tryGet(AudioPayload)
 
-            self._logger.info(
-                f"Play audio {file} ({timedelta(seconds=sound.duration_seconds)})...")
-            play_obj = simpleaudio.play_buffer(
-                sound.raw_data,
-                num_channels=sound.channels,
-                bytes_per_sample=sound.sample_width,
-                sample_rate=sound.frame_rate
-            )
-            play_obj.wait_done()
+        if len(audios) == 0:
+            return PromptResult.Unsupported
+
+        for audio in audios:
+            if datetime.now() >= schedule.endTime:
+                break
+
+            for file in audio.files:
+                if datetime.now() >= schedule.endTime:
+                    break
+
+                self._logger.debug(f"Load file {file}...")
+                sound = AudioSegment.from_file(file)
+                self._logger.info(
+                    f"Play audio {file} ({timedelta(seconds=sound.duration_seconds)})...")
+                play_obj = simpleaudio.play_buffer(
+                    sound.raw_data,
+                    num_channels=sound.channels,
+                    bytes_per_sample=sound.sample_width,
+                    sample_rate=sound.frame_rate
+                )
+                while play_obj.is_playing():
+                    sleep(1)
+                    if datetime.now() >= schedule.endTime:
+                        play_obj.stop()
 
         return self.success()
-
-
-class AudioSelectorStrategy(Enum):
-    Random = 0
-
-
-class AudioSelectorBuilder:
-    def __init__(self) -> None:
-        self.files: list[str] = []
-        self.strategy: AudioSelectorStrategy = AudioSelectorStrategy.Random
-
-    def fromGlob(self, rule: str) -> "AudioSelectorBuilder":
-        self.files = glob.glob(rule)
-        return self
-
-    def useRandom(self) -> "AudioSelectorBuilder":
-        self.strategy = AudioSelectorStrategy.Random
-        return self
-
-    def build(self) -> Callable[[Any], Iterator[str]]:
-        def randomSelector(payload: Any) -> Iterator[str]:
-            result = [x for x in self.files]
-            random.shuffle(result)
-            return result
-        return randomSelector

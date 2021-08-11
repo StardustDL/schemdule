@@ -2,7 +2,7 @@ from enum import auto
 from typing import Any
 import click
 
-from . import Prompter, PromptResult, PrompterPayloadCollection
+from . import Prompter, PromptResult, PrompterPayloadCollection, getMessage
 
 
 class TkinterMessageBoxPrompter(Prompter):
@@ -16,9 +16,8 @@ class TkinterMessageBoxPrompter(Prompter):
         top = tkinter.Tk()
         top.withdraw()
 
-        schedule = payloads.getSchedule()
-
-        tkinter.messagebox.showinfo(f"Attention {schedule.message}", payloads)
+        tkinter.messagebox.showinfo(
+            f"Attention {getMessage(payloads)}", payloads)
         top.destroy()
 
         return self.success()
@@ -29,9 +28,7 @@ class ConsolePrompter(Prompter):
         super().__init__(final)
 
     def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
-        schedule = payloads.getSchedule()
-
-        click.echo(f"Attention {schedule.message}: {payloads}")
+        click.echo(f"Attention {getMessage(payloads)}: {payloads}")
 
         return self.success()
 
@@ -42,7 +39,7 @@ class CallablePrompter(Prompter):
 
     def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
         hasCallable = False
-        for payload in payloads.getUser():
+        for payload in payloads.getUsers():
             if callable(payload):
                 payload()
                 hasCallable = True

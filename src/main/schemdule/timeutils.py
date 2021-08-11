@@ -14,3 +14,8 @@ def subtract_time(a: time, b: time) -> timedelta:
 
 def parse_time(value: str) -> time:
     return time(*list(map(int, map(round, map(float, value.split(':'))))))
+
+
+def time_to_today(value: time) -> datetime:
+    now = datetime.now()
+    return datetime(year=now.year, month=now.month, day=now.day, tzinfo=now.tzinfo) + to_timedelta(value)

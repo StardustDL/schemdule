@@ -13,14 +13,15 @@ from time import sleep
 from ..prompters import CyclePayload, Prompter, PrompterPayloadCollection, SchedulePayload, UserPayload
 from ..schemas.timetable import TimeTable, TimeTableItem
 from ..schemas import default_prompter_builder
-from ..timeutils import subtract_time
+from ..timeutils import subtract_time, time_to_today
 
 
 @dataclass
 class ScheduledTimeTableItem:
     raw: TimeTableItem
     index: int
-    duration: timedelta
+    startTime: datetime
+    endTime: datetime
 
 
 class Scheduler:
@@ -60,10 +61,11 @@ class Scheduler:
                         click.echo(f"Attention: {raw.message} @ {raw.time}")
 
                         payloads = PrompterPayloadCollection().withPayload(
-                            SchedulePayload(item.index, raw.message, item.duration))
-                        
+                            SchedulePayload(item.index, raw.message, item.startTime, item.endTime))
+
                         if raw.cycleIndex is not None:
-                            payloads.withPayload(CyclePayload(raw.cycleWork, raw.cycleIndex))
+                            payloads.withPayload(CyclePayload(
+                                raw.cycleWork, raw.cycleIndex))
 
                         if isinstance(raw.payload, PrompterPayloadCollection):
                             for payload in raw.payload:
@@ -92,7 +94,7 @@ class Scheduler:
 
         self._logger.info(f"Used prompter: {prompter}.")
 
-        items = deque(sorted(timetable.items))
+        items: list[TimeTableItem] = list(sorted(timetable.items))
 
         with enlighten.get_manager() as manager:
             with manager.status_bar('Status',
@@ -101,8 +103,12 @@ class Scheduler:
 
                 totalLen = len(items)
                 for index, item in enumerate(items):
+                    nextItem = None if index + \
+                        1 >= totalLen else items[index + 1]
+                    scheduled = ScheduledTimeTableItem(item, index, time_to_today(
+                        item.time), time_to_today(nextItem.time if nextItem else item.time))
                     while True:
-                        if outdating(item):
+                        if outdating(scheduled):
                             break
-                        elif pending(item, status, manager):
+                        elif pending(scheduled, status, manager):
                             break

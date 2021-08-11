@@ -50,7 +50,7 @@ This extension provide a `AudioPlayerPrompter` and add the following extension m
 
 ```python
 class PrompterBuilder:
-    def useAudioPlayer(self, files: Callable[[Any], Iterator[str]], final: bool = False)) -> "PrompterBuilder":
+    def useAudioPlayer(self, final: bool = False)) -> "PrompterBuilder":
         ...
 ```
 
@@ -60,13 +60,6 @@ Use the extension in the schema script.
 # schema.py
 ext("audioplay")
 
-prompter.useAudioPlayer(lambda payload: [audio_file_path])
-
-# or this
-
-def audio_file_generator(payload: Any) -> Iterator[str]:
-    pass
-
-prompter.useAudioPlayer(audio_file_generator)
+prompter.useAudioPlayer()
 ```
 

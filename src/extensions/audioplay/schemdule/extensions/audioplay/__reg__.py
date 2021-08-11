@@ -6,8 +6,8 @@ from types import MethodType
 from . import __version__
 
 
-def useAudioPlayer(self, files: Callable[[Any], Iterator[str]], final: bool = False) -> PrompterBuilder:
-    return self.use(AudioPlayerPrompter(files, final))
+def useAudioPlayer(self, final: bool = False) -> PrompterBuilder:
+    return self.use(AudioPlayerPrompter(final))
 
 
 PrompterBuilder.useAudioPlayer = useAudioPlayer

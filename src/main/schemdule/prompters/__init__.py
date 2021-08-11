@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import Any, Iterable, Iterator, List, Optional
 from enum import Enum
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 class PromptResult(Enum):
@@ -28,11 +28,16 @@ class UserPayload(PrompterPayload):
     payload: Any
 
 
-@dataclass
+@dataclass(frozen=True)
 class SchedulePayload(PrompterPayload):
     index: int
     message: str
-    duration: timedelta
+    startTime: datetime
+    endTime: datetime
+    duration: timedelta = field(init=False)
+
+    def __post_init__(self) -> None:
+        self.duration = self.endTime - self.endTime
 
 
 class PrompterPayloadCollection(PrompterPayload):
@@ -59,7 +64,7 @@ class PrompterPayloadCollection(PrompterPayload):
     def getCycle(self) -> Optional[CyclePayload]:
         return next(self.tryGet(CyclePayload), None)
 
-    def getUser(self) -> Iterable[UserPayload]:
+    def getUsers(self) -> Iterable[UserPayload]:
         return self.tryGet(UserPayload)
 
     def __iter__(self) -> Iterator[PrompterPayload]:
@@ -85,3 +90,15 @@ class PrompterHub(Prompter, ABC):
     @abstractmethod
     def register(self, prompter: Prompter) -> None:
         pass
+
+
+def getMessage(payloads: PrompterPayloadCollection, cycle: bool = True) -> None:
+    schedule = payloads.getSchedule()
+    message = schedule.message
+
+    if cycle:
+        cycleP = payloads.getCycle()
+        if cycleP:
+            message += f" (cycle {cycleP.index} {'' if cycleP.work else 'resting '}starting)"
+
+    return message
