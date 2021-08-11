@@ -68,7 +68,7 @@ class Scheduler:
 
             if raw.time < now:
                 self._logger.info(f"Outdated: {item}.")
-                print(f"{self._STR_OUTDATED} {buildMessage(item)}")
+                click.echo(f"{self._STR_OUTDATED} {buildMessage(item)}")
                 return True
 
             return False
@@ -96,7 +96,7 @@ class Scheduler:
                     now = datetime.now().time()
                     if raw.time <= now:
                         self._logger.info(f"Occurring: {raw}.")
-                        print(f"{self._STR_ATTENTION} {message}")
+                        click.echo(f"{self._STR_ATTENTION} {message}")
 
                         result = prompter.prompt(item.buildPayloads())
                         self._logger.info(f"Prompting result: {result}.")
@@ -110,7 +110,7 @@ class Scheduler:
             return False
 
         self._logger.info(f"Start scheduling.")
-        print(f"Started Time: {datetime.now().time()}")
+        click.echo(f"Started Time: {datetime.now().time()}")
 
         prompter = timetable.prompter if prompter is None else prompter
 

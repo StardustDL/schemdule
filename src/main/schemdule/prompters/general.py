@@ -32,7 +32,7 @@ class ConsolePrompter(Prompter):
     def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
         from ..helpers import buildMessage
 
-        print(f"Attention {buildMessage(payloads)}: {payloads}")
+        click.echo(f"Attention {buildMessage(payloads)}: {payloads}")
 
         return self.success()
 

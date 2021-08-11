@@ -15,13 +15,13 @@ from .schemas.timetable import TimeTable
 
 def previewTimeTable(timetable: TimeTable, scheduler: Scheduler):
     for item in scheduler.scheduledTimeTable(timetable):
-        print(buildMessage(item))
+        click.echo(buildMessage(item))
 
 
 @click.command()
 def demo():
     """Try a schema scheduling demo."""
-    print("""
+    click.echo("""
 Please give a schema file:
 
     $ python -m schemdule --schema schema.py
@@ -46,22 +46,21 @@ cycle((now + timedelta(seconds=5)).time(),
 
 prompter.clear().useSwitcher().useConsole().useCallable()
 """
-
-    print("A demo schema:\n")
-    print("\n".join(map(lambda x: "    " + x,
+    click.echo("A demo schema:\n")
+    click.echo("\n".join(map(lambda x: "    " + x,
                         demo_schema.strip().splitlines())))
 
     tt = SchemaBuilder()
 
     tt.load(demo_schema)
 
-    print("Built timetable:\n")
+    click.echo("Built timetable:\n")
 
     sc = Scheduler()
 
     previewTimeTable(tt.result, sc)
 
-    print("\nScheduling...\n")
+    click.echo("\nScheduling...\n")
 
     sc.schedule(tt.result)
 
@@ -95,12 +94,12 @@ def ext() -> None:
 
     extnames = findExtensions()
 
-    print(f"Found {len(extnames)} extension(s).")
+    click.echo(f"Found {len(extnames)} extension(s).")
 
     for name in extnames:
         ext = loadExtension(name)
         metadata = getExtensionMetadata(ext)
-        print(f"  {name} v{metadata['version']}")
+        click.echo(f"  {name} v{metadata['version']}")
 
 
 @click.group(invoke_without_command=True)
@@ -112,7 +111,7 @@ def main(ctx=None, verbose: int = 0, version: bool = False) -> None:
 
 A tiny tool using script as schema to schedule one day and remind you to do something during a day.
 """
-    print(f"Welcome to Schemdule v{__version__}!")
+    click.echo(f"Welcome to Schemdule v{__version__}!")
 
     logger = logging.getLogger("Cli-Main")
 
@@ -129,7 +128,7 @@ A tiny tool using script as schema to schedule one day and remind you to do some
     logger.debug(f"Logging level: {loggingLevel}")
 
     if version:
-        print(f"Schemdule v{__version__}")
+        click.echo(f"Schemdule v{__version__}")
         exit(0)
 
 

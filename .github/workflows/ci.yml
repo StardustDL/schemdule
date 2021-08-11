@@ -60,5 +60,7 @@ jobs:
         name: dist
         path: ./dist
     - name: Test
+      env:
+        PYTHONUTF8: 1
       run: |
         Invoke-psake test
