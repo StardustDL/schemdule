@@ -58,19 +58,19 @@ prompter.useTkinterMessageBox()
 The built timetable is like the following one.
 
 ```
-Get up @ 06:30:00
-Working (cycle 1 starting) @ 08:00:00
-Working (cycle 1 resting starting) @ 08:30:00
-Working (cycle 2 starting) @ 08:40:00
-Working (cycle 2 resting starting) @ 09:10:00
-Working (cycle 3 starting) @ 09:20:00
-Working (cycle 3 resting starting) @ 09:50:00
-Working (cycle 4 starting) @ 10:00:00
-Working (cycle 4 resting starting) @ 10:30:00
-Working (cycle 5 starting) @ 10:40:00
-Working (cycle 5 resting starting) @ 11:10:00
-Working (cycle 6 starting) @ 11:20:00
-Working (cycle 6 resting starting) @ 11:50:00
+🕡 06:30:00 - 🕗 08:00:00 🔔 Get up
+🕗 08:00:00 - 🕣 08:30:00 💼 Working (cycle 1 starting)
+🕣 08:30:00 - 🕣 08:40:00 ☕ Working (cycle 1 resting starting)
+🕣 08:40:00 - 🕘 09:10:00 💼 Working (cycle 2 starting)
+🕘 09:10:00 - 🕘 09:20:00 ☕ Working (cycle 2 resting starting)
+🕘 09:20:00 - 🕤 09:50:00 💼 Working (cycle 3 starting)
+🕤 09:50:00 - 🕙 10:00:00 ☕ Working (cycle 3 resting starting)
+🕙 10:00:00 - 🕥 10:30:00 💼 Working (cycle 4 starting)
+🕥 10:30:00 - 🕥 10:40:00 ☕ Working (cycle 4 resting starting)
+🕥 10:40:00 - 🕚 11:10:00 💼 Working (cycle 5 starting)
+🕚 11:10:00 - 🕚 11:20:00 ☕ Working (cycle 5 resting starting)
+🕚 11:20:00 - 🕦 11:50:00 💼 Working (cycle 6 starting)
+🕦 11:50:00 - 🕦 11:50:00 ☕ Working (cycle 6 resting starting)
 ```
 
 ### Run

@@ -42,6 +42,6 @@ def buildMessage(payloads: Union[PayloadCollection, ScheduledTimeTableItem], cyc
             message += f" (cycle {cycleP.index} {'' if cycleP.work else 'resting '}starting)"
 
     if icon:
-        return f"{iconHead} {iconStartTime} {schedule.startTime.time()} - {iconEndTime} {schedule.endTime.time()} {message}"
+        return f"{iconStartTime} {schedule.startTime.time()} - {iconEndTime} {schedule.endTime.time()} {iconHead} {message}"
     else:
         return f"{schedule.startTime.time()} - {schedule.endTime.time()} {message}"
