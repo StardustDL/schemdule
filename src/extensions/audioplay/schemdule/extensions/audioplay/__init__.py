@@ -9,14 +9,14 @@ from typing import Any, Callable, Iterable, Iterator, List
 
 import simpleaudio
 from pydub import AudioSegment, playback
-from schemdule.prompters import (Prompter, PrompterPayload,
-                                 PrompterPayloadCollection, PromptResult)
+from schemdule.prompters import (Payload, PayloadCollection, Prompter,
+                                 PromptResult)
 
-__version__ = "0.0.8"
+__version__ = "0.0.9"
 
 
 @dataclass
-class AudioPayload(PrompterPayload):
+class AudioPayload(Payload):
     files: List[str] = field(default_factory=list)
 
 
@@ -26,7 +26,7 @@ class AudioPlayerPrompter(Prompter):
     def __init__(self, final: bool = False) -> None:
         super().__init__(final)
 
-    def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
+    def prompt(self, payloads: PayloadCollection) -> PromptResult:
         schedule = payloads.getSchedule()
 
         audios: List[AudioPayload] = list(payloads.tryGet(AudioPayload))

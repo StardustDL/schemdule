@@ -14,26 +14,26 @@ class PromptResult(Enum):
     Failed = 4          # Failed, stop going next
 
 
-class PrompterPayload(ABC):
+class Payload(ABC):
     """Payload for prompters."""
     pass
 
 
 @dataclass
-class CyclePayload(PrompterPayload):
+class CyclePayload(Payload):
     """Payload for cycle event."""
     work: bool
     index: int
 
 
 @dataclass
-class UserPayload(PrompterPayload):
+class UserPayload(Payload):
     """Payload that user provided."""
     payload: Any
 
 
 @dataclass
-class SchedulePayload(PrompterPayload):
+class SchedulePayload(Payload):
     """Payload for scheduler information."""
     index: int
     message: str
@@ -45,22 +45,22 @@ class SchedulePayload(PrompterPayload):
         self.duration = self.endTime - self.startTime
 
 
-class PrompterPayloadCollection(PrompterPayload):
+class PayloadCollection(Payload):
     """A collection for multiple payloads."""
 
-    def __init__(self, payloads: Optional[List[PrompterPayload]] = None) -> None:
+    def __init__(self, payloads: Optional[List[Payload]] = None) -> None:
         super().__init__()
         self.payloads = payloads if payloads is not None else []
 
-    def withPayload(self, payload: PrompterPayload) -> "PrompterPayloadCollection":
+    def withPayload(self, payload: Payload) -> "PayloadCollection":
         self.payloads.append(payload)
         return self
 
-    def withPayloads(self, payloads: "PrompterPayloadCollection") -> "PrompterPayloadCollection":
+    def withPayloads(self, payloads: "PayloadCollection") -> "PayloadCollection":
         self.payloads.extend(payloads)
         return self
 
-    def tryGet(self, type: type) -> Iterable[PrompterPayload]:
+    def tryGet(self, type: type) -> Iterable[Payload]:
         for item in self.payloads:
             if isinstance(item, type):
                 yield item
@@ -74,11 +74,14 @@ class PrompterPayloadCollection(PrompterPayload):
     def getUsers(self) -> Iterable[UserPayload]:
         return self.tryGet(UserPayload)
 
-    def __iter__(self) -> Iterator[PrompterPayload]:
-        return iter(self.payloads)
+    def __len__(self) -> int:
+        return len(self.payloads)
+
+    def __getitem__(self, index) -> Payload:
+        return self.payloads[index]
 
     def __repr__(self) -> str:
-        return f"PrompterPayloadCollection({len(self.payloads)} payloads: {'; '.join([str(x) for x in self.payloads])})"
+        return f"PayloadCollection({len(self.payloads)} payloads: {'; '.join([str(x) for x in self.payloads])})"
 
     def __str__(self) -> str:
         return f"Payloads({len(self.payloads)}: {'; '.join([type(x).__name__ for x in self.payloads])})"
@@ -94,7 +97,7 @@ class Prompter(ABC):
         return PromptResult.Finished if self.final else PromptResult.Resolved
 
     @abstractmethod
-    def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
+    def prompt(self, payloads: PayloadCollection) -> PromptResult:
         pass
 
     def __repr__(self) -> str:

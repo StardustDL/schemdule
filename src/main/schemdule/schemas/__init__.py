@@ -11,7 +11,7 @@ import enlighten
 from ..extensions import (findExtensions, loadExtension, loadExtensions,
                           useExtension, useExtensions)
 from ..prompters import Prompter
-from ..prompters.builder import PrompterBuilder
+from ..prompters.builders import PayloadBuilder, PrompterBuilder
 from ..timeutils import parse_time, subtract_time, to_timedelta
 from .timetable import TimeTable, TimeTableItem
 
@@ -36,6 +36,8 @@ class SchemaBuilder:
         def at(raw_time: Union[str, time], message: str = "", payload: Any = None) -> None:
             ttime = parse_time(raw_time) if isinstance(
                 raw_time, str) else raw_time
+            if isinstance(payload, PayloadBuilder):
+                payload = payload.build()
             self.result.at(ttime, message, payload)
 
         def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time, timedelta], raw_rest_duration: Union[str, time, timedelta], message: str = "", work_payload: Any = None, rest_payload: Any = None) -> None:
@@ -48,9 +50,18 @@ class SchemaBuilder:
             trest_duration = to_timedelta(parse_time(raw_rest_duration)) if isinstance(
                 raw_rest_duration, str) else to_timedelta(raw_rest_duration) if isinstance(
                 raw_rest_duration, time) else raw_rest_duration
+
+            if isinstance(work_payload, PayloadBuilder):
+                work_payload = work_payload.build()
+            if isinstance(rest_payload, PayloadBuilder):
+                rest_payload = rest_payload.build()
+
             self.result.cycle(
                 tstart, tend, twork_duration, trest_duration,
                 message, work_payload, rest_payload)
+
+        def payloads() -> PayloadBuilder:
+            return PayloadBuilder()
 
         def loadRaw(source: str) -> None:
             src_preview = source[:50].replace('\n', ' ').replace('\r', ' ')
@@ -78,6 +89,7 @@ class SchemaBuilder:
         env["load"] = load
         env["loadRaw"] = loadRaw
         env["ext"] = ext
+        env["payloads"] = payloads
         env["prompter"] = prompterBuilder
         env["env"] = env
 

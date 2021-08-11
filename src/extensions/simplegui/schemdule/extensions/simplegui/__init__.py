@@ -2,10 +2,9 @@ from typing import Any
 
 import PySimpleGUI as sg
 from schemdule.helpers import buildMessage
-from schemdule.prompters import (Prompter, PrompterPayloadCollection,
-                                 PromptResult)
+from schemdule.prompters import PayloadCollection, Prompter, PromptResult
 
-__version__ = "0.0.8"
+__version__ = "0.0.9"
 
 
 class MessageBoxPrompter(Prompter):
@@ -13,12 +12,16 @@ class MessageBoxPrompter(Prompter):
         super().__init__(final)
         self.auto_close = auto_close
 
-    def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
+    def prompt(self, payloads: PayloadCollection) -> PromptResult:
         schedule = payloads.getSchedule()
 
         auto_close_duration = max(int(schedule.duration.total_seconds()), 3)
 
-        sg.popup_scrolled(str(payloads), title=f"Attention {buildMessage(payloads)}", auto_close=self.auto_close,
+        count = len(payloads)
+        messages = [f"{count} payload{'' if count <= 1 else 's'}",
+                    *(str(x) for x in payloads)]
+
+        sg.popup_scrolled("\n".join(messages), title=f"📣 {buildMessage(payloads)}", auto_close=self.auto_close,
                           auto_close_duration=auto_close_duration,
                           keep_on_top=True, background_color='white', text_color='black')
 

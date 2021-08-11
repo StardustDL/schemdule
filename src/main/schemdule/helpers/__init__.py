@@ -11,7 +11,7 @@ import click
 
 import enlighten
 
-from ..prompters import PrompterPayloadCollection
+from ..prompters import PayloadCollection
 from ..schedulers import ScheduledTimeTableItem
 
 EMOJI_TIME = ["🕛🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚", "🕧🕜🕝🕞🕟🕠🕡🕢🕣🕤🕥🕦"]
@@ -20,7 +20,7 @@ EMOJI_WORK = "💼"
 EMOJI_REST = "☕"
 
 
-def buildMessage(payloads: Union[PrompterPayloadCollection, ScheduledTimeTableItem], cycle: bool = True, icon: bool = True) -> str:
+def buildMessage(payloads: Union[PayloadCollection, ScheduledTimeTableItem], cycle: bool = True, icon: bool = True) -> str:
     if isinstance(payloads, ScheduledTimeTableItem):
         return buildMessage(payloads.buildPayloads(), cycle=cycle, icon=icon)
 
@@ -42,6 +42,6 @@ def buildMessage(payloads: Union[PrompterPayloadCollection, ScheduledTimeTableIt
             message += f" (cycle {cycleP.index} {'' if cycleP.work else 'resting '}starting)"
 
     if icon:
-        return f"{iconHead} {message} {iconStartTime} {schedule.startTime.time()} - {iconEndTime} {schedule.endTime.time()}"
+        return f"{iconHead} {iconStartTime} {schedule.startTime.time()} - {iconEndTime} {schedule.endTime.time()} {message}"
     else:
-        return f"{message} {schedule.startTime.time()} - {schedule.endTime.time()}"
+        return f"{schedule.startTime.time()} - {schedule.endTime.time()} {message}"

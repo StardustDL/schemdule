@@ -46,11 +46,15 @@ schemdule ext
 
 ## Usage
 
-This extension provide a `AudioPlayerPrompter` and add the following extension methods on `PrompterBuilder`.
+This extension provide a `AudioPlayerPrompter` and add the following extension methods on `PrompterBuilder` and `PayloadBuilder`.
 
 ```python
 class PrompterBuilder:
-    def useAudioPlayer(self, final: bool = False)) -> "PrompterBuilder":
+    def useAudioPlayer(self, final: bool = False) -> "PrompterBuilder":
+        ...
+
+class PayloadBuilder:
+    def useAudio(self, files: Iterable[str]) -> "PayloadBuilder":
         ...
 ```
 
@@ -59,6 +63,8 @@ Use the extension in the schema script.
 ```python
 # schema.py
 ext("audioplay")
+
+at(..., payloads().useAudio(["file1"]))
 
 prompter.useAudioPlayer()
 ```

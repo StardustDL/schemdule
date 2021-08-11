@@ -10,7 +10,7 @@ import click
 
 import enlighten
 
-from ..prompters import (CyclePayload, Prompter, PrompterPayloadCollection,
+from ..prompters import (CyclePayload, Payload, PayloadCollection, Prompter,
                          SchedulePayload, UserPayload)
 from ..schemas.timetable import TimeTable, TimeTableItem
 from ..timeutils import subtract_time, time_to_today
@@ -23,18 +23,20 @@ class ScheduledTimeTableItem:
     startTime: datetime
     endTime: datetime
 
-    def buildPayloads(self) -> PrompterPayloadCollection:
-        payloads = PrompterPayloadCollection().withPayload(
+    def buildPayloads(self) -> PayloadCollection:
+        payloads = PayloadCollection().withPayload(
             SchedulePayload(self.index, self.raw.message, self.startTime, self.endTime))
 
         if self.raw.cycleIndex is not None:
             payloads.withPayload(CyclePayload(
                 self.raw.cycleWork, self.raw.cycleIndex))
 
-        if isinstance(self.raw.payload, PrompterPayloadCollection):
+        if isinstance(self.raw.payload, PayloadCollection):
             for payload in self.raw.payload:
                 if payload is not None:
-                    payloads.withPayload(UserPayload(payload))
+                    payloads.withPayload(payload)
+        elif isinstance(self.raw.payload, Payload):
+            payloads.withPayload(self.raw.payload)
         elif self.raw.payload is not None:
             payloads.withPayload(UserPayload(self.raw.payload))
 

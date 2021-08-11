@@ -1,7 +1,7 @@
 
 from types import MethodType
 
-from schemdule.prompters.builder import PrompterBuilder
+from schemdule.prompters.builders import PrompterBuilder
 
 from . import MiaotixingPrompter, __version__
 

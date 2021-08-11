@@ -101,6 +101,8 @@ Schemdule provide `at`, `cycle`, `load` and `ext` functions for registering even
 
 def at(raw_time: Union[str, time], message: str = "", payload: Any = None) -> None:
     # register an event at time with message
+    # if payload is a PayloadBuilder, Schemdule will build the final payload automaticly, 
+    #   same as cycle function's payload parameters
     ...
 
 def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time, timedelta], raw_rest_duration: Union[str, time, timedelta], message: str = "", work_payload: Any = None, rest_payload: Any = None) -> None:
@@ -121,6 +123,15 @@ def ext(name: Optional[str] = None) -> None:
     # use an extension or use all installed extensions (if name is None)
     # provided by packages `schemdule-extensions-{extension name}`
     ...
+
+def payloads() -> PayloadBuilder:
+    # create a payload builder
+    ...
+
+# the class PayloadBuilder
+
+class PayloadBuilder:
+    def use(self, payload: Any) -> "PayloadBuilder": ...
 
 # the class of the variable `prompter`
 
@@ -153,13 +164,14 @@ Here are the type annotions for schema.
 # Type annotions
 from typing import Callable, Union, Any, Dict, Optional
 from datetime import time, timedelta
-from schemdule.prompters.builder import PrompterBuilder
+from schemdule.prompters.builders import PrompterBuilder, PayloadBuilder
 from schemdule.prompters import Prompter, PrompterHub
 at: Callable[[Union[str, time], str, Any], None]
 cycle: Callable[[Union[str, time], Union[str, time], Union[str, time, timedelta], Union[str, time, timedelta], str, Any, Any], None]
 loadRaw: Callable[[str], None]
 load: Callable[[str], None]
 ext: Callable[[Optional[str]], None]
+payloads: Callable[[None], PayloadBuilder]
 prompter: PrompterBuilder
 env: Dict[str, Any]
 ```

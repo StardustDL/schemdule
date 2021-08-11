@@ -1,7 +1,7 @@
 import logging
 from typing import Any
 
-from . import Prompter, PrompterHub, PrompterPayloadCollection, PromptResult
+from . import PayloadCollection, Prompter, PrompterHub, PromptResult
 
 
 class PrompterSwitcher(PrompterHub):
@@ -15,7 +15,7 @@ class PrompterSwitcher(PrompterHub):
         self._logger.debug(f"Register: {prompter}.")
         self.prompters.append(prompter)
 
-    def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
+    def prompt(self, payloads: PayloadCollection) -> PromptResult:
         results = []
         schedule = payloads.getSchedule()
         for prompter in self.prompters:
@@ -62,7 +62,7 @@ class PrompterBroadcaster(PrompterHub):
         self._logger.debug(f"Register: {prompter}.")
         self.prompters.append(prompter)
 
-    def prompt(self, payloads: PrompterPayloadCollection) -> PromptResult:
+    def prompt(self, payloads: PayloadCollection) -> PromptResult:
         schedule = payloads.getSchedule()
         for prompter in self.prompters:
             self._logger.info(

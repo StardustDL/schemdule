@@ -1,14 +1,19 @@
 
 from types import MethodType
-from typing import Any, Callable, Iterator
+from typing import Any, Callable, Iterable, Iterator, List, Optional
 
-from schemdule.prompters.builder import PrompterBuilder
+from schemdule.prompters.builders import PayloadBuilder, PrompterBuilder
 
-from . import AudioPlayerPrompter, __version__
+from . import AudioPayload, AudioPlayerPrompter, __version__
 
 
-def useAudioPlayer(self, final: bool = False) -> PrompterBuilder:
+def useAudioPlayer(self: PrompterBuilder, final: bool = False) -> PrompterBuilder:
     return self.use(AudioPlayerPrompter(final))
 
 
+def useAudio(self: PayloadBuilder, files: Iterable[str]) -> PayloadBuilder:
+    return self.use(AudioPayload(list(files)))
+
+
 PrompterBuilder.useAudioPlayer = useAudioPlayer
+PayloadBuilder.useAudio = useAudio

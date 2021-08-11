@@ -1,6 +1,6 @@
-from typing import Optional
+from typing import Any, Optional
 
-from . import Prompter, PrompterHub
+from . import Payload, PayloadCollection, Prompter, PrompterHub, UserPayload
 from .general import (CallablePrompter, ConsolePrompter,
                       TkinterMessageBoxPrompter)
 from .hubs import PrompterBroadcaster, PrompterSwitcher
@@ -50,4 +50,28 @@ class PrompterBuilder:
 
     def build(self) -> Optional[Prompter]:
         """Build the final prompter."""
+        return self._result
+
+
+class PayloadBuilder:
+    """Builder for payload."""
+
+    def __init__(self) -> None:
+        self._result: Optional[Payload] = None
+
+    def use(self, payload: Any) -> "PayloadBuilder":
+        """Use a payload."""
+        wrapped = payload if isinstance(
+            payload, Payload) else UserPayload(payload)
+        if self._result is None:
+            self._result = wrapped
+        elif isinstance(self._result, PayloadCollection):
+            self._result.withPayload(wrapped)
+        else:
+            payloads = PayloadCollection([self._result, wrapped])
+            self._result = payloads
+        return self
+
+    def build(self) -> Optional[Payload]:
+        """Build the final payload."""
         return self._result
