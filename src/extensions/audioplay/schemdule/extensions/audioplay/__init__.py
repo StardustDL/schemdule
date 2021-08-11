@@ -1,21 +1,23 @@
-from dataclasses import dataclass, field
-from time import sleep
-from typing import Any, Callable, Iterable, Iterator
-import logging
-from enum import Enum
-from datetime import datetime, time, timedelta
-import random
-from pydub import AudioSegment, playback
-import simpleaudio
 import glob
-from schemdule.prompters import Prompter, PromptResult, PrompterPayload, PrompterPayloadCollection
+import logging
+import random
+from dataclasses import dataclass, field
+from datetime import datetime, time, timedelta
+from enum import Enum
+from time import sleep
+from typing import Any, Callable, Iterable, Iterator, List
+
+import simpleaudio
+from pydub import AudioSegment, playback
+from schemdule.prompters import (Prompter, PrompterPayload,
+                                 PrompterPayloadCollection, PromptResult)
 
 __version__ = "0.0.8"
 
 
 @dataclass
 class AudioPayload(PrompterPayload):
-    files: list[str] = field(default_factory=list)
+    files: List[str] = field(default_factory=list)
 
 
 class AudioPlayerPrompter(Prompter):

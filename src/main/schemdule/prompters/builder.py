@@ -1,9 +1,9 @@
 from typing import Optional
 
-
 from . import Prompter, PrompterHub
+from .general import (CallablePrompter, ConsolePrompter,
+                      TkinterMessageBoxPrompter)
 from .hubs import PrompterBroadcaster, PrompterSwitcher
-from .general import ConsolePrompter, TkinterMessageBoxPrompter, CallablePrompter
 
 
 class PrompterBuilder:

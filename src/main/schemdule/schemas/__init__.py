@@ -1,17 +1,19 @@
-from datetime import date, time, datetime, timedelta
-from typing import Dict, Optional, Union, Any, cast
-
 import functools
-from queue import deque
-import enlighten
-import click
 import json
 import logging
+from datetime import date, datetime, time, timedelta
+from queue import deque
+from typing import Any, Dict, Optional, Union, cast
 
+import click
+
+import enlighten
+
+from ..extensions import (findExtensions, loadExtension, loadExtensions,
+                          useExtension, useExtensions)
 from ..prompters import Prompter
 from ..prompters.builder import PrompterBuilder
-from ..extensions import loadExtension, useExtension, findExtensions, loadExtensions, useExtensions
-from ..timeutils import to_timedelta, subtract_time, parse_time
+from ..timeutils import parse_time, subtract_time, to_timedelta
 from .timetable import TimeTable, TimeTableItem
 
 

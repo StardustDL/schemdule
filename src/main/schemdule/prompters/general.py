@@ -1,8 +1,9 @@
 from enum import auto
 from typing import Any
+
 import click
 
-from . import Prompter, PromptResult, PrompterPayloadCollection, getMessage
+from . import Prompter, PrompterPayloadCollection, PromptResult, getMessage
 
 
 class TkinterMessageBoxPrompter(Prompter):

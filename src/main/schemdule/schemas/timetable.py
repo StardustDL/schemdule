@@ -1,34 +1,20 @@
-from datetime import date, time, datetime, timedelta
-from typing import Optional, Union, Any
-
 import functools
 import logging
+from dataclasses import dataclass
+from datetime import date, datetime, time, timedelta
+from typing import Any, Optional, Union
 
 from ..prompters import Prompter
-from ..timeutils import to_timedelta, subtract_time, parse_time
+from ..timeutils import parse_time, subtract_time, to_timedelta
 
 
-@functools.total_ordering
+@dataclass(order=True, frozen=True)
 class TimeTableItem:
-    def __init__(self, time: time, message: str = "", payload: Any = None, cycleIndex: Optional[int] = None, cycleWork: bool = False) -> None:
-        self.time = time
-        self.message = message
-        self.payload = payload
-        self.cycleIndex = cycleIndex
-        self.cycleWork = cycleWork
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, TimeTableItem):
-            return (self.time, self.message) == (other.time, other.message)
-        return NotImplemented
-
-    def __lt__(self, other: object) -> bool:
-        if isinstance(other, TimeTableItem):
-            return self.time < other.time
-        return NotImplemented
-
-    def __repr__(self) -> str:
-        return f"TimeTableItem({self.time}, {self.message})"
+    time: time
+    message: str = ""
+    payload: Any = None
+    cycleIndex: Optional[int] = None
+    cycleWork: bool = False
 
 
 class TimeTable:

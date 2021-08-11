@@ -1,6 +1,8 @@
-import PySimpleGUI as sg
 from typing import Any
-from schemdule.prompters import Prompter, PromptResult, PrompterPayloadCollection, getMessage
+
+import PySimpleGUI as sg
+from schemdule.prompters import (Prompter, PrompterPayloadCollection,
+                                 PromptResult, getMessage)
 
 __version__ = "0.0.8"
 

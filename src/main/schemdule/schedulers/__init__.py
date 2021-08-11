@@ -1,18 +1,20 @@
-from dataclasses import dataclass
-from datetime import date, time, datetime, timedelta
-from typing import Optional, Union, Any
-
 import functools
-from queue import deque
-import enlighten
-import click
 import json
 import logging
-
+from dataclasses import dataclass
+from datetime import date, datetime, time, timedelta
+from queue import deque
 from time import sleep
-from ..prompters import CyclePayload, Prompter, PrompterPayloadCollection, SchedulePayload, UserPayload
-from ..schemas.timetable import TimeTable, TimeTableItem
+from typing import Any, Optional, Union
+
+import click
+
+import enlighten
+
+from ..prompters import (CyclePayload, Prompter, PrompterPayloadCollection,
+                         SchedulePayload, UserPayload)
 from ..schemas import default_prompter_builder
+from ..schemas.timetable import TimeTable, TimeTableItem
 from ..timeutils import subtract_time, time_to_today
 
 
@@ -31,9 +33,11 @@ class Scheduler:
         def outdating(item: ScheduledTimeTableItem) -> bool:
             now = datetime.now().time()
 
-            if item.time < now:
+            raw = item.raw
+
+            if raw.time < now:
                 self._logger.info(f"Outdated: {item}.")
-                click.echo(f"Outdated: {item.raw.message} @ {item.raw.time}")
+                click.echo(f"Outdated: {raw.message} @ {raw.time}")
                 return True
 
             return False

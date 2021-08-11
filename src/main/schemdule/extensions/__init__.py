@@ -1,9 +1,9 @@
-from abc import ABC, abstractmethod
+import importlib
 import logging
+import pkgutil
+from abc import ABC, abstractmethod
 from types import ModuleType
 from typing import Any, Dict, List, Set
-import importlib
-import pkgutil
 
 EXTENSION_MODULE_PREFIX = "schemdule.extensions."
 

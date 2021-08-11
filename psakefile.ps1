@@ -93,4 +93,8 @@ Task Clean {
 
 Task Format {
     autopep8 -r --in-place .
+
+    foreach ($file in Get-Childitem "*.py" -Recurse) {
+        isort $file
+    }
 }

@@ -1,11 +1,14 @@
-from typing import Optional
-import click
 import logging
-import enlighten
 import time
-from .schemas import SchemaBuilder
-from .schedulers import Scheduler
+from typing import Optional
+
+import click
+
+import enlighten
+
 from . import __version__
+from .schedulers import Scheduler
+from .schemas import SchemaBuilder
 
 
 @click.command()

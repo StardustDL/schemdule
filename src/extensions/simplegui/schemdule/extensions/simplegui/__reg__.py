@@ -1,8 +1,9 @@
 
-from schemdule.prompters.builder import PrompterBuilder
-from . import MessageBoxPrompter
 from types import MethodType
-from . import __version__
+
+from schemdule.prompters.builder import PrompterBuilder
+
+from . import MessageBoxPrompter, __version__
 
 
 def useMessageBox(self, auto_close: bool = False, final: bool = False) -> PrompterBuilder:

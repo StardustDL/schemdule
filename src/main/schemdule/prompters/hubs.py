@@ -1,6 +1,7 @@
 import logging
 from typing import Any
-from . import Prompter, PromptResult, PrompterHub, PrompterPayloadCollection
+
+from . import Prompter, PrompterHub, PrompterPayloadCollection, PromptResult
 
 
 class PrompterSwitcher(PrompterHub):
