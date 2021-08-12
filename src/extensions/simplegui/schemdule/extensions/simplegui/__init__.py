@@ -17,8 +17,8 @@ class MessageBoxPrompter(Prompter):
     def prompt(self, payloads: PayloadCollection) -> PromptResult:
         schedule = payloads.getSchedule()
 
-        auto_close_duration = max(
-            min(int(schedule.duration.total_seconds() / 10), self.maxKeep.total_seconds()), 3)
+        auto_close_duration = int(max(
+            min(schedule.duration.total_seconds() / 10, self.maxKeep.total_seconds()), 3))
 
         count = len(payloads)
         title = f"📣 {buildMessage(payloads)}"

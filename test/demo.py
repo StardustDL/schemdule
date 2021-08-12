@@ -8,8 +8,10 @@ def callable_payload():
     print("From Callable")
 
 
-def callable_payload2():
-    print("From Callable for resting")
+def callable_payload2(value):
+    def internal():
+        print(f"From Callable for resting (cycle {value}).")
+    return internal
 
 
 at((now + timedelta(seconds=1)).time(), "Demo event", callable_payload)
@@ -22,6 +24,6 @@ cycle((now + timedelta(seconds=5)).time(),
       "00:00:05",
       "Demo cycle",
       None,
-      lambda _: payloads().use(callable_payload2))
+      lambda i: payloads().use(callable_payload2(i)))
 
 prompter.clear().useSwitcher().useConsole().useCallable()

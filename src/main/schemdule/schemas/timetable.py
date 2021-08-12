@@ -45,14 +45,14 @@ class TimeTable:
         self.items.append(TimeTableItem(
             time, message, payload, cycleIndex, cycleWork))
 
-    def cycle(self, start: time, end: time, work_duration: timedelta, rest_duration: timedelta, message: str = "", work_payload: Optional[Callable[[int], Any]] = None, rest_payload: Optional[Callable[[int], Any]] = None) -> None:
+    def cycle(self, start: time, end: time, workDuration: timedelta, restDuration: timedelta, message: str = "", workPayload: Optional[Callable[[int], Any]] = None, restPayload: Optional[Callable[[int], Any]] = None) -> None:
         self._logger.debug(
-            f"{message} ({work_payload}, {rest_payload}) cycle from {start} to {end} (work {work_duration}, rest {rest_duration}).")
+            f"{message} ({workPayload}, {restPayload}) cycle from {start} to {end} (work {workDuration}, rest {restDuration}).")
 
-        if work_payload is None:
-            def work_payload(_): return None
-        if rest_payload is None:
-            def rest_payload(_): return None
+        if workPayload is None:
+            def workPayload(_): return None
+        if restPayload is None:
+            def restPayload(_): return None
 
         _start = datetime(2000, 1, 1) + to_timedelta(start)
         _end = datetime(2000, 1, 1) + to_timedelta(end)
@@ -64,11 +64,11 @@ class TimeTable:
         while current < _end:
             index += 1
             self.at(min(current, _end).time(),
-                    message, work_payload(index), index, True)
-            current += work_duration
+                    message, workPayload(index), index, True)
+            current += workDuration
             self.at(min(current, _end).time(),
-                    message, rest_payload(index), index, False)
-            current += rest_duration
+                    message, restPayload(index), index, False)
+            current += restDuration
 
     def clear(self) -> None:
         self.items.clear()

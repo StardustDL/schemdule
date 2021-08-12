@@ -99,16 +99,16 @@ Schemdule provide `at`, `cycle`, `load` and `ext` functions for registering even
 ```python
 # raw_time can be {hh:mm} or {hh:mm:ss} or a datetime.time object
 
-def at(raw_time: Union[str, time], message: str = "", payload: Any = None) -> None:
+def at(rawTime: Union[str, time], message: str = "", payload: Any = None) -> None:
     # register an event at time with message
     # if payload is a PayloadBuilder, Schemdule will build the final payload automaticly
     ...
 
-def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time, timedelta], raw_rest_duration: Union[str, time, timedelta], message: str = "", work_payload: Optional[Callable[[int], Any]] = None, rest_payload: Optional[Callable[[int], Any]] = None) -> None:
+def cycle(rawStart: Union[str, time], rawEnd: Union[str, time], rawWorkDuration: Union[str, time, timedelta], rawRestDuration: Union[str, time, timedelta], message: str = "", workPayload: Optional[Callable[[int], Any]] = None, restPayload: Optional[Callable[[int], Any]] = None) -> None:
     # register a series of events in cycle during start to end
-    # the duration of one cycle = work_duration + rest_duration
+    # the duration of one cycle = workDuration + restDuration
     # For each cycle, register 2 event: cycle starting, cycle resting
-    # work_payload and rest_payload is the payload generator such as:
+    # workPayload and restPayload is the payload generator such as:
     #   def generator(index: int) -> Any: ...
     # if the returened payload is a PayloadBuilder, Schemdule will build the final payload automaticly, 
     ...

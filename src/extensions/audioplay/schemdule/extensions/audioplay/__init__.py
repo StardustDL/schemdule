@@ -60,6 +60,7 @@ class AudioPlayerPrompter(Prompter):
                 while play_obj.is_playing():
                     sleep(globalConfiguration.timeslice.total_seconds())
                     if self._needStop(schedule):
+                        self._logger.info(f"Stop audio {file}.")
                         play_obj.stop()
 
         return self.success()

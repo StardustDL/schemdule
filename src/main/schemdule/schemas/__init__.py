@@ -33,27 +33,27 @@ class SchemaBuilder:
 
         env = {}
 
-        def at(raw_time: Union[str, time], message: str = "", payload: Any = None) -> None:
-            ttime = parse_time(raw_time) if isinstance(
-                raw_time, str) else raw_time
+        def at(rawTime: Union[str, time], message: str = "", payload: Any = None) -> None:
+            ttime = parse_time(rawTime) if isinstance(
+                rawTime, str) else rawTime
             if isinstance(payload, PayloadBuilder):
                 payload = payload.build()
             self.result.at(ttime, message, payload)
 
-        def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time, timedelta], raw_rest_duration: Union[str, time, timedelta], message: str = "", work_payload: Optional[Callable[[int], Any]] = None, rest_payload: Optional[Callable[[int], Any]] = None) -> None:
-            tstart = parse_time(raw_start) if isinstance(
-                raw_start, str) else raw_start
-            tend = parse_time(raw_end) if isinstance(raw_end, str) else raw_end
-            twork_duration = to_timedelta(parse_time(raw_work_duration)) if isinstance(
-                raw_work_duration, str) else to_timedelta(raw_work_duration) if isinstance(
-                raw_work_duration, time) else raw_work_duration
-            trest_duration = to_timedelta(parse_time(raw_rest_duration)) if isinstance(
-                raw_rest_duration, str) else to_timedelta(raw_rest_duration) if isinstance(
-                raw_rest_duration, time) else raw_rest_duration
+        def cycle(rawStart: Union[str, time], rawEnd: Union[str, time], rawWorkDuration: Union[str, time, timedelta], rawRestDuration: Union[str, time, timedelta], message: str = "", workPayload: Optional[Callable[[int], Any]] = None, restPayload: Optional[Callable[[int], Any]] = None) -> None:
+            tstart = parse_time(rawStart) if isinstance(
+                rawStart, str) else rawStart
+            tend = parse_time(rawEnd) if isinstance(rawEnd, str) else rawEnd
+            twork_duration = to_timedelta(parse_time(rawWorkDuration)) if isinstance(
+                rawWorkDuration, str) else to_timedelta(rawWorkDuration) if isinstance(
+                rawWorkDuration, time) else rawWorkDuration
+            trest_duration = to_timedelta(parse_time(rawRestDuration)) if isinstance(
+                rawRestDuration, str) else to_timedelta(rawRestDuration) if isinstance(
+                rawRestDuration, time) else rawRestDuration
 
             self.result.cycle(
                 tstart, tend, twork_duration, trest_duration,
-                message, work_payload, rest_payload)
+                message, workPayload, restPayload)
 
         def payloads() -> PayloadBuilder:
             return PayloadBuilder()
