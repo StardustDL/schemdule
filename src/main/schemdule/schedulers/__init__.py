@@ -32,9 +32,7 @@ class ScheduledTimeTableItem:
                 self.raw.cycleWork, self.raw.cycleIndex))
 
         if isinstance(self.raw.payload, PayloadCollection):
-            for payload in self.raw.payload:
-                if payload is not None:
-                    payloads.withPayload(payload)
+            payloads.withPayloads(self.raw.payload)
         elif isinstance(self.raw.payload, Payload):
             payloads.withPayload(self.raw.payload)
         elif self.raw.payload is not None:
@@ -98,6 +96,9 @@ class Scheduler:
                     now = datetime.now().time()
                     if raw.time <= now:
                         self._logger.info(f"Occurring: {raw}.")
+                        pbar.update(pbar.total - pbar.count)
+                        status.update(f"{self._STR_ATTENTION} {message}")
+
                         click.echo(f"{self._STR_ATTENTION} {message}")
 
                         result = prompter.prompt(item.buildPayloads())

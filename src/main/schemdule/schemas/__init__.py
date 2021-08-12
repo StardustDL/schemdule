@@ -62,6 +62,9 @@ class SchemaBuilder:
 
         def payloads() -> PayloadBuilder:
             return PayloadBuilder()
+        
+        def prompters() -> PrompterBuilder:
+            return PrompterBuilder()
 
         def loadRaw(source: str) -> None:
             src_preview = source[:50].replace('\n', ' ').replace('\r', ' ')
@@ -90,6 +93,7 @@ class SchemaBuilder:
         env["loadRaw"] = loadRaw
         env["ext"] = ext
         env["payloads"] = payloads
+        env["prompters"] = prompters
         env["prompter"] = prompterBuilder
         env["env"] = env
 

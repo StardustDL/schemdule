@@ -128,6 +128,10 @@ def payloads() -> PayloadBuilder:
     # create a payload builder
     ...
 
+def prompters() -> PrompterBuilder:
+    # create a prompter builder
+    ...
+
 # the class PayloadBuilder
 
 class PayloadBuilder:
@@ -171,7 +175,8 @@ cycle: Callable[[Union[str, time], Union[str, time], Union[str, time, timedelta]
 loadRaw: Callable[[str], None]
 load: Callable[[str], None]
 ext: Callable[[Optional[str]], None]
-payloads: Callable[[None], PayloadBuilder]
+payloads: Callable[[], PayloadBuilder]
+payloads: Callable[[], PrompterBuilder]
 prompter: PrompterBuilder
 env: Dict[str, Any]
 ```
