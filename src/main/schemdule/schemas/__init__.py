@@ -57,7 +57,7 @@ class SchemaBuilder:
 
         def payloads() -> PayloadBuilder:
             return PayloadBuilder()
-        
+
         def prompters() -> PrompterBuilder:
             return PrompterBuilder()
 

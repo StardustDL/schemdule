@@ -22,6 +22,6 @@ cycle((now + timedelta(seconds=5)).time(),
       "00:00:05",
       "Demo cycle",
       None,
-      payloads().use(callable_payload2))
+      lambda _: payloads().use(callable_payload2))
 
 prompter.clear().useSwitcher().useConsole().useCallable()

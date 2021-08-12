@@ -50,7 +50,10 @@ This extension provide a `AudioPlayerPrompter` and add the following extension m
 
 ```python
 class PrompterBuilder:
-    def useAudioPlayer(self, final: bool = False) -> "PrompterBuilder":
+    def useAudioPlayer(self: PrompterBuilder, endSpace: Optional[timedelta] = None, final: bool = False) -> PrompterBuilder:
+        """
+        endSpace: Stop audio before next event, default 10 seconds. The empty space leads to the next event outdated.
+        """
         ...
 
 class PayloadBuilder:

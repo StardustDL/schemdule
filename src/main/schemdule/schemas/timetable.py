@@ -50,9 +50,9 @@ class TimeTable:
             f"{message} ({work_payload}, {rest_payload}) cycle from {start} to {end} (work {work_duration}, rest {rest_duration}).")
 
         if work_payload is None:
-            work_payload = lambda _: None
+            def work_payload(_): return None
         if rest_payload is None:
-            rest_payload = lambda _: None
+            def rest_payload(_): return None
 
         _start = datetime(2000, 1, 1) + to_timedelta(start)
         _end = datetime(2000, 1, 1) + to_timedelta(end)

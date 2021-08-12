@@ -38,7 +38,10 @@ This extension provide a `MessageBoxPrompter` and add the following extension me
 
 ```python
 class PrompterBuilder:
-    def useMessageBox(self, auto_close: bool = False, final: bool = False) -> "PrompterBuilder":
+    def useMessageBox(self, autoClose: bool = False, maxKeep: Optional[timedelta] = None, final: bool = False) -> PrompterBuilder:
+        """
+        maxKeep: The maximum duration to keep opening messagebox if autoClose is True, default 1 minute.
+        """
         ...
 ```
 

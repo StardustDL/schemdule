@@ -1,8 +1,8 @@
+import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
-import logging
 from typing import Any, Iterable, Iterator, List, Optional, Union, cast
 
 

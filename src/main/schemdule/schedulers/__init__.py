@@ -10,6 +10,7 @@ import click
 
 import enlighten
 
+from ..configurations.globals import globalConfiguration
 from ..prompters import (CyclePayload, Payload, PayloadCollection, Prompter,
                          SchedulePayload, UserPayload)
 from ..schemas.timetable import TimeTable, TimeTableItem
@@ -108,7 +109,7 @@ class Scheduler:
                         delta = subtract_time(raw.time, now)
                         count = int(round(delta.total_seconds()))
                         pbar.update((pbar.total - count) - pbar.count)
-                    sleep(1)
+                    sleep(globalConfiguration.timeslice.total_seconds())
 
             return False
 
