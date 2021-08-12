@@ -2,7 +2,7 @@ import functools
 import json
 import logging
 from datetime import date, datetime, time, timedelta
-from typing import Any, Dict, Optional, Union, cast
+from typing import Any, Callable, Dict, Optional, Union, cast
 
 import click
 
@@ -40,7 +40,7 @@ class SchemaBuilder:
                 payload = payload.build()
             self.result.at(ttime, message, payload)
 
-        def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time, timedelta], raw_rest_duration: Union[str, time, timedelta], message: str = "", work_payload: Any = None, rest_payload: Any = None) -> None:
+        def cycle(raw_start: Union[str, time], raw_end: Union[str, time], raw_work_duration: Union[str, time, timedelta], raw_rest_duration: Union[str, time, timedelta], message: str = "", work_payload: Optional[Callable[[int], Any]] = None, rest_payload: Optional[Callable[[int], Any]] = None) -> None:
             tstart = parse_time(raw_start) if isinstance(
                 raw_start, str) else raw_start
             tend = parse_time(raw_end) if isinstance(raw_end, str) else raw_end
@@ -50,11 +50,6 @@ class SchemaBuilder:
             trest_duration = to_timedelta(parse_time(raw_rest_duration)) if isinstance(
                 raw_rest_duration, str) else to_timedelta(raw_rest_duration) if isinstance(
                 raw_rest_duration, time) else raw_rest_duration
-
-            if isinstance(work_payload, PayloadBuilder):
-                work_payload = work_payload.build()
-            if isinstance(rest_payload, PayloadBuilder):
-                rest_payload = rest_payload.build()
 
             self.result.cycle(
                 tstart, tend, twork_duration, trest_duration,

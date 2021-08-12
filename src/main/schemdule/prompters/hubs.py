@@ -22,7 +22,7 @@ class PrompterSwitcher(PrompterHub):
             self._logger.info(
                 f"Send '{schedule.message}' to prompter: {prompter}.")
 
-            result = prompter.prompt(payloads)
+            result = prompter.safePrompt(payloads)
 
             self._logger.info(f"Recieved {result} from prompter {prompter}.")
 
@@ -68,7 +68,7 @@ class PrompterBroadcaster(PrompterHub):
             self._logger.info(
                 f"Send '{schedule.message}' to prompter: {prompter}.")
 
-            result = prompter.prompt(payloads)
+            result = prompter.safePrompt(payloads)
 
             self._logger.info(f"Recieved {result} from prompter {prompter}.")
 

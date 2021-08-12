@@ -101,7 +101,7 @@ class Scheduler:
 
                         click.echo(f"{self._STR_ATTENTION} {message}")
 
-                        result = prompter.prompt(item.buildPayloads())
+                        result = prompter.safePrompt(item.buildPayloads())
                         self._logger.info(f"Prompting result: {result}.")
                         return True
                     else:

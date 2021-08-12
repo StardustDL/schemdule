@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
+import logging
 from typing import Any, Iterable, Iterator, List, Optional, Union, cast
 
 
@@ -88,6 +89,7 @@ class PayloadCollection(Payload):
 
 
 class Prompter(ABC):
+    _logger = logging.getLogger("Prompter")
     """Prompter for every event."""
 
     def __init__(self, final: bool = False) -> None:
@@ -99,6 +101,15 @@ class Prompter(ABC):
     @abstractmethod
     def prompt(self, payloads: PayloadCollection) -> PromptResult:
         pass
+
+    def safePrompt(self, payloads: PayloadCollection) -> PromptResult:
+        """Exception free prompt, return Failed when error occurs."""
+        try:
+            result = self.prompt(payloads)
+            return result
+        except Exception as ex:
+            self._logger.error(ex)
+            return PromptResult.Failed
 
     def __repr__(self) -> str:
         return type(self).__name__

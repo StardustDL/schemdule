@@ -2,7 +2,10 @@ import functools
 import logging
 from dataclasses import dataclass
 from datetime import date, datetime, time, timedelta
-from typing import Any, Optional, Union
+from re import L
+from typing import Any, Callable, Optional, Union
+
+from schemdule.prompters.builders import PayloadBuilder
 
 from ..prompters import Prompter
 from ..timeutils import parse_time, subtract_time, to_timedelta
@@ -29,13 +32,28 @@ class TimeTable:
         self.prompter = prompter
 
     def at(self, time: time, message: str = "", payload: Any = None, cycleIndex: Optional[int] = None, cycleWork: bool = False) -> None:
+        """
+        Register an event at time with message.
+
+        If payload is a PayloadBuilder, Schemdule will build the final payload automaticly.
+        """
         self._logger.debug(f"{message} ({payload}) at {time}.")
+
+        if isinstance(payload, PayloadBuilder):
+            payload = payload.build()
+
         self.items.append(TimeTableItem(
             time, message, payload, cycleIndex, cycleWork))
 
-    def cycle(self, start: time, end: time, work_duration: timedelta, rest_duration: timedelta, message: str = "", work_payload: Any = None, rest_payload: Any = None) -> None:
+    def cycle(self, start: time, end: time, work_duration: timedelta, rest_duration: timedelta, message: str = "", work_payload: Optional[Callable[[int], Any]] = None, rest_payload: Optional[Callable[[int], Any]] = None) -> None:
         self._logger.debug(
             f"{message} ({work_payload}, {rest_payload}) cycle from {start} to {end} (work {work_duration}, rest {rest_duration}).")
+
+        if work_payload is None:
+            work_payload = lambda _: None
+        if rest_payload is None:
+            rest_payload = lambda _: None
+
         _start = datetime(2000, 1, 1) + to_timedelta(start)
         _end = datetime(2000, 1, 1) + to_timedelta(end)
 
@@ -46,10 +64,10 @@ class TimeTable:
         while current < _end:
             index += 1
             self.at(min(current, _end).time(),
-                    message, work_payload, index, True)
+                    message, work_payload(index), index, True)
             current += work_duration
             self.at(min(current, _end).time(),
-                    message, rest_payload, index, False)
+                    message, rest_payload(index), index, False)
             current += rest_duration
 
     def clear(self) -> None:
