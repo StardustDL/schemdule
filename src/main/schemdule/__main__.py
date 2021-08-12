@@ -24,7 +24,7 @@ def demo():
     click.echo("""
 Please give a schema file:
 
-    $ python -m schemdule --schema schema.py
+    $ schemdule run schema.py
 """)
 
     demo_schema = """

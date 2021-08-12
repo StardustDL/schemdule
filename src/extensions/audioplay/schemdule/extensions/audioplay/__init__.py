@@ -12,7 +12,7 @@ from pydub import AudioSegment, playback
 from schemdule.prompters import (Payload, PayloadCollection, Prompter,
                                  PromptResult)
 
-__version__ = "0.0.9"
+__version__ = "0.1.0"
 
 
 @dataclass

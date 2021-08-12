@@ -55,7 +55,7 @@ prompter.useTkinterMessageBox()
 # prompter.useBroadcaster().useConsole().useMessageBox(True)
 ```
 
-The built timetable is like the following one.
+The built timetable is like the following one from the results of the command `schemdule run schema.py --preview`.
 
 ```
 🕡 06:30:00 - 🕗 08:00:00 🔔 Get up
