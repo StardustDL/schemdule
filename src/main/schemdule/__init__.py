@@ -5,7 +5,7 @@ import click
 
 import enlighten
 
-__version__ = "0.0.10"
+__version__ = "0.0.11"
 
 
 def get_app_directory():

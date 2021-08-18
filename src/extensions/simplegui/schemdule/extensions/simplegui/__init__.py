@@ -5,7 +5,7 @@ import PySimpleGUI as sg
 from schemdule.helpers import buildMessage
 from schemdule.prompters import PayloadCollection, Prompter, PromptResult
 
-__version__ = "0.0.10"
+__version__ = "0.0.11"
 
 
 class MessageBoxPrompter(Prompter):

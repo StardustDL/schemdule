@@ -96,22 +96,23 @@ class Scheduler:
                 while True:
                     now = datetime.now().time()
                     if raw.time <= now:
-                        self._logger.info(f"Occurring: {raw}.")
-                        pbar.update(pbar.total - pbar.count)
-                        status.update(f"{self._STR_ATTENTION} {message}")
-
-                        click.echo(f"{self._STR_ATTENTION} {message}")
-
-                        result = prompter.safePrompt(item.buildPayloads())
-                        self._logger.info(f"Prompting result: {result}.")
-                        return True
+                        break
                     else:
                         delta = subtract_time(raw.time, now)
                         count = int(round(delta.total_seconds()))
                         pbar.update((pbar.total - count) - pbar.count)
                     sleep(globalConfiguration.timeslice.total_seconds())
+                
+                self._logger.info(f"Occurring: {raw}.")
+                pbar.update(pbar.total - pbar.count)
+                status.update(f"{self._STR_ATTENTION} {message}")
 
-            return False
+                click.echo(f"{self._STR_ATTENTION} {message}")
+
+                result = prompter.safePrompt(item.buildPayloads())
+                self._logger.info(f"Prompting result: {result}.")
+                return True
+
 
         self._logger.info(f"Start scheduling.")
         click.echo(f"Started Time: {datetime.now().time()}")
