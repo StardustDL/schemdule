@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from . import Payload, PayloadCollection, Prompter, PrompterHub, UserPayload
 from .general import (CallablePrompter, ConsolePrompter,
@@ -12,8 +12,12 @@ class PrompterBuilder:
     def __init__(self) -> None:
         self._result: Optional[Prompter] = None
 
-    def use(self, prompter: Prompter) -> "PrompterBuilder":
+    def use(self, prompter: Union[Prompter, "PrompterBuilder"]) -> "PrompterBuilder":
         """Use a prompter."""
+        if isinstance(prompter, PrompterBuilder):
+            prompter = prompter.build()
+            if prompter is None:
+                return self
         if self._result is None:
             self._result = prompter
         elif isinstance(self._result, PrompterHub):

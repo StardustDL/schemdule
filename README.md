@@ -143,7 +143,7 @@ class PayloadBuilder:
 # the class of the variable `prompter`
 
 class PrompterBuilder:
-    def use(self, prompter: Prompter) -> "PrompterBuilder": ...
+    def use(self, prompter: Union[Prompter, "PrompterBuilder"]) -> "PrompterBuilder":
 
     def useBroadcaster(self, final: bool = False) -> "PrompterBuilder": ...
 

@@ -33,6 +33,7 @@ Task Install {
 
     Write-Output "🛠 Install dependencies"
     if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Linux)) {
+        Exec { sudo apt-get update >/dev/null }
         Exec { sudo apt-get install -yq python3-dev libasound2-dev >/dev/null }
         Exec { sudo apt-get install -yq ffmpeg >/dev/null }
     }

@@ -22,11 +22,17 @@ class MessageBoxPrompter(Prompter):
 
         count = len(payloads)
         title = f"📣 {buildMessage(payloads)}"
-        messages = [title, f"{count} payload{'' if count <= 1 else 's'}",
+        messages = [title, "Click Yes to continue prompting, or No to finish prompting."
+                    f"{count} payload{'' if count <= 1 else 's'}",
                     *(str(x) for x in payloads)]
 
-        sg.popup_scrolled("\n".join(messages), title=title, auto_close=self.autoClose,
-                          auto_close_duration=auto_close_duration,
-                          keep_on_top=True, background_color='white', text_color='black')
+        result = sg.popup_scrolled("\n".join(messages), title=title, auto_close=self.autoClose,
+                                   auto_close_duration=auto_close_duration, yes_no=True, size=(120, None),
+                                   keep_on_top=True, background_color='white', text_color='black')
 
-        return self.success()
+        if result == "No":
+            return PromptResult.Finished
+        elif result == "Yes":
+            return PromptResult.Resolved
+        else:
+            return self.success()
