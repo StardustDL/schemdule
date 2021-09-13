@@ -7,7 +7,7 @@ from urllib import parse, request
 from schemdule.helpers import buildMessage
 from schemdule.prompters import PayloadCollection, Prompter, PromptResult
 
-__version__ = "0.0.11"
+__version__ = "0.1.0"
 
 
 class MiaotixingPrompter(Prompter):

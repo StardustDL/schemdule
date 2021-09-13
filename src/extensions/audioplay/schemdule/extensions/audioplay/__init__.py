@@ -13,7 +13,7 @@ from schemdule.configurations.globals import globalConfiguration
 from schemdule.prompters import (Payload, PayloadCollection, Prompter,
                                  PromptResult, SchedulePayload)
 
-__version__ = "0.0.11"
+__version__ = "0.1.0"
 
 
 @dataclass
