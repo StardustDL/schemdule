@@ -1,5 +1,5 @@
 click==8.0.1
-enlighten==1.10.1
+enlighten==1.11.2
 pydub==0.25.1
 simpleaudio==1.0.4
 PySimpleGUI==4.47.0
